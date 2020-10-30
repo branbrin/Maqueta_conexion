@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.maqueta_conexion">
+    <!-- Solicito permiso para que la aplicación pueda usar módulo bluetooth -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- TODO 1.1 Permiso de localizacion -->
+    <!-- Es necesario para poder realizar busquedas -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Mando6"></activity>
+        <activity android:name=".Mando5" />
+        <activity android:name=".Mando4" />
+        <activity android:name=".mando3" />
+        <activity
+            android:name=".Mando2"
+            android:label="@string/title_activity_mando2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Mando1" />
+        <activity
+            android:name=".mando0"
+            android:label="@string/title_activity_mando0"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MotorActivity" />
+        <activity android:name=".BluetoothMainActivity" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

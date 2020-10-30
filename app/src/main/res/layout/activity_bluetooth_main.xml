@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <HorizontalScrollView
+        android:id="@+id/pantallas"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="300dp"
+        android:background="@drawable/borde"
+        android:longClickable="false"
+        android:measureAllChildren="false"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:showDividers="middle"
+            android:divider="@drawable/horiz_divider">
+
+            <ImageView
+                android:id="@+id/image6"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+
+                android:onClick="botonMotor6"
+
+                android:background="@drawable/borde"/>
+
+
+            <ImageView
+                android:id="@+id/image5"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:onClick="botonMotor5"
+                android:background="@drawable/borde"/>
+
+            <ImageView
+                android:id="@+id/image4"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+
+                android:onClick="botonMotor4"
+
+                android:background="@drawable/borde"/>
+            <ImageView
+                android:id="@+id/image3"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+
+                android:onClick="botonMotor3"
+
+                android:background="@drawable/borde"/>
+
+
+            <ImageView
+                android:id="@+id/image2"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+
+                android:onClick="botonMotor2"
+
+                android:background="@drawable/borde"/>
+
+
+
+            <ImageView
+                android:id="@+id/image1"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:onClick="botonMotor"
+                android:background="@drawable/borde"/>
+
+            <ImageView
+                android:id="@+id/image0"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:onClick="botonMotor0"
+                android:background="@drawable/borde"/>
+        </LinearLayout>
+
+
+    </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/botonBluetooth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="84dp"
+        android:layout_marginLeft="84dp"
+        android:layout_marginTop="64dp"
+        android:onClick="botonBluetooth"
+        android:text="Conectar"
+
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <Button
+        android:id="@+id/botonMotor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:onClick="botonMotor"
+        android:text="Motor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/botonBluetooth" />
+
+</android.support.constraint.ConstraintLayout>
