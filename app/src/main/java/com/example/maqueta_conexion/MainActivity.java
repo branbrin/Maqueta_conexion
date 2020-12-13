@@ -1,5 +1,7 @@
 package com.example.maqueta_conexion;
 
+import android.app.Application;
+//import android.arch.lifecycle.ViewModelProvider;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,16 +9,23 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Environment;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.annotation.RequiresApi;
+//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,11 +38,13 @@ public class MainActivity extends AppCompatActivity {
    static HorizontalScrollView horizontalScrollView;
    static ImageView imageView0;
    static ImageView imageView1;
-    static ImageView imageView2;
-    static ImageView imageView3;
-    static ImageView imageView4;
-    static ImageView imageView5;
-    static ImageView imageView6;
+   static ImageView imageView2;
+   static ImageView imageView3;
+   static ImageView imageView4;
+   static ImageView imageView5;
+   static ImageView imageView6;
+
+
 
 
     @Override
@@ -48,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
         imageView4=findViewById(R.id.image4);
         imageView5=findViewById(R.id.image5);
         imageView6=findViewById(R.id.image6);
-
-
 
 
         Bitmap bitmap = null;
@@ -85,9 +94,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void onResume(){
         super.onResume();
-
             Bitmap bitmap = null;
-
             try{
                 FileInputStream fileInputStream =
                         new FileInputStream(getApplicationContext().getFilesDir().getPath()+ "/imagen"+maquetaID+".png");
@@ -118,13 +125,7 @@ public class MainActivity extends AppCompatActivity {
                     imageView6.setImageBitmap(bitmap);
                     break;
             }
-
-
-
-
-
     }
-
 
     public void botonBluetooth(View view){
         Intent intentBluetoothActivity =new Intent(MainActivity.this, BluetoothMainActivity.class);
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void botonMotor0(View view){
         maquetaID=0;
-        Intent intentMotor =new Intent(MainActivity.this, mando0.class);
+        Intent intentMotor =new Intent(MainActivity.this, Mando0.class);
         startActivity(intentMotor);
     }
     public void botonMotor(View view){

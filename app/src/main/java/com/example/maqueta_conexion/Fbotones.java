@@ -1,14 +1,15 @@
-package com.example.maqueta_conexion.fragmentosPaneles;
+package com.example.maqueta_conexion;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+//import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.maqueta_conexion.Constantes;
-import com.example.maqueta_conexion.R;
+import androidx.fragment.app.Fragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,17 +17,22 @@ import com.example.maqueta_conexion.R;
  * create an instance of this fragment.
  */
 public class Fbotones extends Fragment {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    Button mButon;
+    Button boton;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     public Fbotones() {
         // Required empty public constructor
+    }
+    public Fbotones(Button b){
+        mButon=b;
     }
 
     /**
@@ -60,6 +66,7 @@ public class Fbotones extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_fbotones, container, false);
     }
     // This event is triggered soon after onCreateView().
@@ -68,12 +75,36 @@ public class Fbotones extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        boton = view.findViewById(R.id.configcab);
+        EditText etcab=view.findViewById(R.id.popup_botones);
         TextView mensaje=view.findViewById(R.id.mensaje);
         TextView cabecero=view.findViewById(R.id.cabecero);
-        mensaje.setText("Mensaje: "+Constantes.botonRojoMen);
-        cabecero.setText("ID: "+cabecero.getId());
+        Botones b=(Botones) mButon.getTag();
+        mensaje.setText("Mensaje:  "+ b.getMensaje());
+        cabecero.setText("Cabecero:  "+ b.getCabecero());
 
+        boton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //FragmentManager fragmentManager = getParentFragmentManager();
+              //  FragPopupBotones fragPopupBotones=new FragPopupBotones(mButon);
+             //   FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                //etcab.setText(b.getCabecero());
+                GeneralDialogFragment generalDialogFragment =
+                        GeneralDialogFragment.newInstance("CONFIGURAR BOTON", "message",b.getId());
+                generalDialogFragment.show(getParentFragmentManager(),"dialog");
+
+
+
+               // Mando4.dialog.show();
+               // Dialog dialog_botones=new Dialog(getActivity());
+              //  dialog_botones.show();
+
+              //  Mando4.popupContainer.setVisibility(View.VISIBLE);
+               // fragmentTransaction.replace(R.id.paneles, fragPopupBotones );
+               // fragmentTransaction.commit();
+            }
+        });
 
     }
 

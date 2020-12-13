@@ -7,15 +7,18 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Environment;
-import android.support.annotation.RequiresApi;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.annotation.RequiresApi;
+//import android.support.constraint.ConstraintLayout;
+//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -44,6 +47,7 @@ public class MotorActivity extends AppCompatActivity {
     FileOutputStream file;
     private Object File;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +55,7 @@ public class MotorActivity extends AppCompatActivity {
         Intent intent = getIntent();
         id = intent.getStringExtra("bluto");
         TVconsigna=findViewById((R.id.TVconsigna));
+
         estado=findViewById(R.id.estado3);
         velocidad=findViewById(R.id.velocidad);
         pruebas= findViewById(R.id.pruebas);

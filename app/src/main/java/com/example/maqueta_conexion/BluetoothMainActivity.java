@@ -17,8 +17,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.ParcelUuid;
 import android.os.Parcelable;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.annotation.RequiresApi;
+//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -33,6 +33,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -150,6 +153,7 @@ public class BluetoothMainActivity extends AppCompatActivity {
             }else{
                 mBluetoothAdapter.disable();
                 item.setTitle("Habilitar bluetooth");
+
             }
         }
         if (id == R.id.accion_emparejados){
@@ -160,6 +164,7 @@ public class BluetoothMainActivity extends AppCompatActivity {
               dispositivos sincronizaos*/
             listaPulsable.clear();
             Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+
             // If there are paired devices
             if (pairedDevices.size() > 0) {
                 // Loop through paired devices
@@ -294,10 +299,16 @@ public class BluetoothMainActivity extends AppCompatActivity {
                 if (connectThread != null){
                     if (connectThread.mmSocket.isConnected()){
                         estado.setText("CONECTADO CLIENTE");
-                        MotorActivity.estado.setText("CONECTADO CLIENTE");
+                        if (MotorActivity.estado!=null){
+                            MotorActivity.estado.setText("CONECTADO CLIENTE");
+                        }
+
                     }else{
                         estado.setText("DESCONECTADO CLIENTE");
-                        MotorActivity.estado.setText("DESCONECTADO CLIENTE");
+                        if (MotorActivity.estado!=null){
+                            MotorActivity.estado.setText("DESCONECTADO CLIENTE");
+                        }
+
                     }
                     estadoAux= (String) estado.getText();
                 }
@@ -387,9 +398,16 @@ public class BluetoothMainActivity extends AppCompatActivity {
                     }
                     connectThread = new ConnectThread(device);
                     connectThread.start();
-                    Intent intentMotor =new Intent(BluetoothMainActivity.this, MotorActivity.class);
-                    intentMotor.putExtra("bluto",user.id);
-                    startActivity(intentMotor);
+                    if (Mando4.conectar_mando==4){
+                        Intent intentMando4 =new Intent(BluetoothMainActivity.this, Mando4.class);
+                        Mando4.conectar_mando=-1;
+                        startActivity(intentMando4);
+                    }else {
+                        Intent intentMotor =new Intent(BluetoothMainActivity.this, MotorActivity.class);
+                        intentMotor.putExtra("bluto",user.id);
+                        startActivity(intentMotor);
+                    }
+
 
 
                 }
@@ -674,24 +692,39 @@ public class BluetoothMainActivity extends AppCompatActivity {
         public void handleMessage(Message mensaje){
             if (mensaje.what==Constantes.MESSAGE_READ){
                 //byte[] arrayByte=(byte[]) mensaje.obj;
-                MotorActivity.pantalla.setText(""+MotorActivity.pantalla.getText()+(char)mensaje.arg1+" ");
+                if (MotorActivity.pantalla!=null){
+                    MotorActivity.pantalla.setText(""+MotorActivity.pantalla.getText()+(char)mensaje.arg1+" ");
+                }
+
                 gestionar_mensaje(mensaje.arg1);
             }
         }
     }
     //-------------------FIN HANDLER--------------------------------------------------------------
     public void gestionar_mensaje(int mensaje){
-        MotorActivity.velocidad.setText("VELOCIDAD: ");
+        if (MotorActivity.velocidad!=null){
+            MotorActivity.velocidad.setText("VELOCIDAD: ");
+        }
+
         //MotorActivity.pruebas.setText("Tamaño= "+tamaño);
        // ArrayList trama = new ArrayList<Character>();
         trama.add((char)mensaje);
-        MotorActivity.pruebas.setText("-"+MotorActivity.pruebas.getText()+(char)mensaje);
+        if (MotorActivity.pruebas!=null){
+            MotorActivity.pruebas.setText("-"+MotorActivity.pruebas.getText()+(char)mensaje);
+        }
+
 
         if (mensaje==0x04){
-            MotorActivity.pruebas.setText("entrei en fin mensaje e esta é a trama"+trama.get(0)+trama.get(1)+trama.get(2)+trama.get(3));
+            if (MotorActivity.pruebas!=null){
+                MotorActivity.pruebas.setText("entrei en fin mensaje e esta é a trama"+trama.get(0)+trama.get(1)+trama.get(2)+trama.get(3));
+            }
+
             switch ((char)trama.get(0)){
                 case 'e':
-                    MotorActivity.velocidad.setText(""+MotorActivity.velocidad.getText()+trama.get(1)+trama.get(2)+trama.get(3)+" RPM");
+                    if (MotorActivity.pruebas!=null){
+                        MotorActivity.velocidad.setText(""+MotorActivity.velocidad.getText()+trama.get(1)+trama.get(2)+trama.get(3)+" RPM");
+                    }
+
                     trama.clear();
                     break;
 
@@ -707,7 +740,10 @@ public class BluetoothMainActivity extends AppCompatActivity {
                         if ((char)trama.get(1)=='#'){
                             int a = Integer.parseInt(consigna);
                             MotorActivity.enviarConsigna(a);
-                            MotorActivity.pruebas.setText(""+consigna);
+                            if (MotorActivity.pruebas!=null){
+                                MotorActivity.pruebas.setText(""+consigna);
+                            }
+
                             consigna="";
                             espera_consigna = false;
                         }
@@ -738,6 +774,12 @@ public class BluetoothMainActivity extends AppCompatActivity {
         if (BluetoothMainActivity.connectThread.mmSocket!=null){
             BluetoothMainActivity.connectedThread.write(tipo);
         }
+    }
+    public void intento(View view){
+        Intent discoverableIntent =
+                new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        startActivity(discoverableIntent);
     }
 
 

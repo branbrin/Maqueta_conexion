@@ -1,11 +1,14 @@
 package com.example.maqueta_conexion.fragmentosPaneles;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+//import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+
+import com.example.maqueta_conexion.MyTouchListener;
 import com.example.maqueta_conexion.R;
 
 /**
@@ -59,5 +62,18 @@ public class Terminales extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_terminales, container, false);
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        // final View testItem = view.findViewById(R.id.button2);
+        //  testItem.setOnClickListener(new botonClick());
+        // testItem.setOnTouchListener(new MoveViewTouchListener(testItem));
+
+        // view.findViewById(R.id.button).setOnClickListener(new botonClick());
+        view.findViewById(R.id.terminal).setOnTouchListener(new MyTouchListener());
+
+
+
     }
 }

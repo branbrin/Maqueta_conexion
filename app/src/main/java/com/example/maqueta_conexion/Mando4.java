@@ -1,26 +1,35 @@
 package com.example.maqueta_conexion;
 
+//import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.constraint.ConstraintLayout;
+//import android.support.v4.app.Fragment;
+//import android.support.v4.app.FragmentManager;
+//import android.support.v4.app.FragmentTransaction;
+//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.maqueta_conexion.fragmentosMandos.Fmando4;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.example.maqueta_conexion.fragmentosMandos.Fmando4Activado;
 import com.example.maqueta_conexion.fragmentosPaneles.Acelerometro;
 import com.example.maqueta_conexion.fragmentosPaneles.Borrar;
 import com.example.maqueta_conexion.fragmentosPaneles.Botones;
@@ -38,13 +47,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Mando4 extends AppCompatActivity {
 
+    static public ArrayList<Button> botones_actuales;
+    static public ArrayList<ConstraintLayout> terminales_actuales;
+
+    public static int conectar_mando=-1;
     FragmentManager fragmentManager = getSupportFragmentManager();
-
-
-
+    public static boolean attachMando4=true;
+    public static TextView pruebas;
+    public static AlertDialog dialog;
     TextView panelTexto;
     TextView panelBotones;
     TextView panelInterruptores;
@@ -60,11 +74,15 @@ public class Mando4 extends AppCompatActivity {
     ConstraintLayout constraintLayout;
     ViewGroup guardado;
     static View botonview;
+    public  static  ConstraintLayout popupContainer;
+    public static AlertDialog.Builder builderBotones;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mando4);
         Intent intent=getIntent();
+        pruebas=findViewById(R.id.TVpruebas);
         panelTexto= findViewById(R.id.panelTexto);
         panelBotones=findViewById(R.id.textView3);
         panelInterruptores=findViewById(R.id.textView4);
@@ -77,6 +95,31 @@ public class Mando4 extends AppCompatActivity {
         panelTamañomalla=findViewById(R.id.textView11);
         panelMalla=findViewById(R.id.textView12);
         panelCosas=findViewById(R.id.textView13);
+        View customLayout =  LayoutInflater.from(this).inflate(R.layout.popup_botones, null);
+
+       /* builderBotones = new AlertDialog.Builder(this);
+        builderBotones.setView(customLayout);
+        builderBotones.setTitle("CONFIGURAR BOTÓN");
+
+            // Add the buttons
+        builderBotones.setPositiveButton(R.string.Aceptar, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+
+            }
+        });
+        builderBotones.setNegativeButton(R.string.Cancelar, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        dialog = Mando4.builderBotones.create();
+
+
+
+        */
+
+
        // final View testItem = findViewById(R.id.button3);
        // testItem.setOnTouchListener(new MoveViewTouchListener(testItem));
        // constraintLayout=findViewById(R.id.constraintLayout4);
@@ -84,7 +127,120 @@ public class Mando4 extends AppCompatActivity {
      //   View cosa = new View(this);
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.constraintLayout4, new Fmando4() );
+        fragmentTransaction.add(R.id.constraintLayout4, new Fmando4(),"fmando4" );
+        fragmentTransaction.commit();
+
+
+
+
+    }
+
+
+    //-----------------------------MENU----------------------------------------------------------------
+    public boolean onCreateOptionsMenu(Menu menu){
+        //Uso método getMenuInflater de AppCompactActivity para controlar la creación  del menu
+        MenuInflater inflater = getMenuInflater();
+        //Asigno mi menu_conectar al creador
+        inflater.inflate(R.menu.menu_mando4, menu);
+
+
+
+        return true;
+
+    }
+
+    public class TryMeActivity extends
+            FragmentActivity implements GeneralDialogFragment.OnDialogFragmentClickListener {
+
+        @Override
+        public void onOkClicked(GeneralDialogFragment dialog) {
+            // do your stuff
+        }
+
+        @Override
+        public void onCancelClicked(GeneralDialogFragment dialog) {
+            // do your stuff
+        }
+    }
+/*
+   // public class DialogFragment extends DialogFragment {
+  //      @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getApplication());
+            // Get the layout inflater
+            LayoutInflater inflater = getLayoutInflater();
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView(inflater.inflate(R.layout.popup_botones, null))
+                    // Add action buttons
+                    .setPositiveButton(R.string.Aceptar, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            // sign in the user ...
+                        }
+                    })
+                    .setNegativeButton(R.string.Cancelar, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+            return builder.create();
+        }
+   // }
+*/
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        Fmando4Activado fmando4Activado=new Fmando4Activado();
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        //Se pulsó boton del menu "Habilitar bluetooth"
+        if (id == R.id.activar_mando){
+            // fragmentTransaction = fragmentManager.beginTransaction();
+
+            fragmentTransaction.replace(R.id.constraint4, fmando4Activado,"Fmando4");
+            fragmentTransaction.commit();
+            pruebas.setText("Holi!");
+            if (botones_actuales.size()>0){
+                //Mando4.mViewViewModel.borrarTodo();
+                for(int i=0;i<botones_actuales.size();i++){
+                    com.example.maqueta_conexion.Botones actualizador=Fmando4.botones.get(i);
+                    actualizador.setX(botones_actuales.get(i).getX());
+                    actualizador.setY(botones_actuales.get(i).getY());
+                    Fmando4.mViewViewModel.añadeBoton(actualizador);
+                }
+            }
+
+        }
+        if (id == R.id.modo_editar){
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag("Fmando4");
+            if(fragment != null) {
+                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+            }
+        }
+        if (id==R.id.conectar){
+            conectar_mando=4;
+            Intent intentBluetoothActivity =new Intent(this, BluetoothMainActivity.class);
+            startActivity(intentBluetoothActivity);
+
+        }
+
+
+
+
+        return super.onOptionsItemSelected(item);
+
+    }
+    //--------------------------------FIN MENU----------------------------------------------------
+
+    public  void resetFmando4(){
+       Fragment fragment = getSupportFragmentManager().findFragmentByTag("Fmando4");
+        if(fragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        }
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.constraintLayout4, new Fmando4(),"Fmando4" );
         fragmentTransaction.commit();
     }
     /*
@@ -196,11 +352,17 @@ public class Mando4 extends AppCompatActivity {
 
 
     }
+  /*  protected void onResume(){
+        super.onResume();
+        resetFmando4();
+    }*/
+
 
     public void mostrar_texto(View view){
         TextView textView=(TextView)view;
         Texto texto = new Texto();
         selector(textView,texto);
+
 
         //fragmentTransaction.commitAllowingStateLoss();
     }

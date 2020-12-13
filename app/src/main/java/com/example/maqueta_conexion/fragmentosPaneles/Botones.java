@@ -1,10 +1,12 @@
 package com.example.maqueta_conexion.fragmentosPaneles;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+//import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.maqueta_conexion.Mando4;
 import com.example.maqueta_conexion.MoveViewTouchListener;
@@ -75,12 +77,20 @@ public class Botones extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final View testItem = view.findViewById(R.id.button2);
-        testItem.setOnClickListener(new botonClick());
+       // final View testItem = view.findViewById(R.id.button2);
+      //  testItem.setOnClickListener(new botonClick());
        // testItem.setOnTouchListener(new MoveViewTouchListener(testItem));
 
-        view.findViewById(R.id.button).setOnClickListener(new botonClick());
+       // view.findViewById(R.id.button).setOnClickListener(new botonClick());
         view.findViewById(R.id.button).setOnTouchListener(new MyTouchListener());
+        view.findViewById(R.id.boton_azul).setOnTouchListener(new MyTouchListener());
+        view.findViewById(R.id.boton_amarillo).setOnTouchListener(new MyTouchListener());
+        view.findViewById(R.id.boton_verde).setOnTouchListener(new MyTouchListener());
+        view.findViewById(R.id.boton_arriba).setOnTouchListener(new MyTouchListener());
+        view.findViewById(R.id.boton_derecha).setOnTouchListener(new MyTouchListener());
+        view.findViewById(R.id.boton_abajo).setOnTouchListener(new MyTouchListener());
+        view.findViewById(R.id.boton_izquierda).setOnTouchListener(new MyTouchListener());
+
 
     }
 

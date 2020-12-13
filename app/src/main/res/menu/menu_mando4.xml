@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.maqueta_conexion">
+
+    <!--Añado item pulsable al menu -->
+
+
+
+    <item
+        android:id="@+id/activar_mando"
+        android:orderInCategory="1"
+        android:icon="?attr/selectableItemBackground"
+        android:title="Activar mando" />
+
+    <!--TODO 8.1 Crear item para busqueda de dispositivos bluetooth-->
+    <item
+        android:id="@+id/modo_editar"
+        android:orderInCategory="2"
+        android:title="Modo editar" />
+
+    <!--TODO 9.1 Crear item para iniciar búsqueda de dispositivos cercanos -->
+
+    <item
+        android:id="@+id/conectar"
+        android:orderInCategory="3"
+        android:title="Conectar" />
+
+
+
+
+
+</menu>
