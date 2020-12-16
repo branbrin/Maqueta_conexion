@@ -14,7 +14,6 @@
     android:layout_marginStart="40dp"
     android:layout_marginLeft="40dp"
     android:layout_marginTop="40dp"
-
     android:background="@drawable/round_buton"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
@@ -25,7 +24,6 @@
         android:layout_height="50dp"
         android:layout_marginStart="120dp"
         android:layout_marginLeft="120dp"
-
         android:layout_marginTop="40dp"
         android:background="@drawable/boton_azul"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +35,6 @@
         android:layout_height="50dp"
         android:layout_marginStart="280dp"
         android:layout_marginLeft="280dp"
-
         android:layout_marginTop="40dp"
         android:background="@drawable/boton_amarillo"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +46,6 @@
         android:layout_height="50dp"
         android:layout_marginStart="200dp"
         android:layout_marginLeft="200dp"
-
         android:layout_marginTop="40dp"
         android:background="@drawable/boton_verde"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,13 +55,11 @@
         android:id="@+id/boton_arriba"
         android:layout_width="50dp"
         android:layout_height="50dp"
-
         android:layout_marginStart="364dp"
         android:layout_marginLeft="364dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/pad_arriba2"
         android:drawableTop="@drawable/flecha_arriba"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -73,13 +67,11 @@
         android:id="@+id/boton_derecha"
         android:layout_width="50dp"
         android:layout_height="50dp"
-
         android:layout_marginStart="440dp"
         android:layout_marginLeft="440dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/pad_derecha"
         android:drawableRight="@drawable/flecha_derecha"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -87,27 +79,23 @@
         android:id="@+id/boton_abajo"
         android:layout_width="50dp"
         android:layout_height="50dp"
-
         android:layout_marginStart="520dp"
         android:layout_marginLeft="520dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/pad_abajo"
         android:drawableBottom="@drawable/flecha_abajo"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/boton_izquierda"
-        android:layout_width="50dp"
+        android:layout_width="70       dp"
         android:layout_height="50dp"
-
         android:layout_marginStart="604dp"
         android:layout_marginLeft="604dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/pad_izquierda"
         android:drawableLeft="@drawable/flecha_izquierda"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
