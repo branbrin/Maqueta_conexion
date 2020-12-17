@@ -89,7 +89,7 @@
 
     <Button
         android:id="@+id/boton_izquierda"
-        android:layout_width="70       dp"
+        android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="604dp"
         android:layout_marginLeft="604dp"
