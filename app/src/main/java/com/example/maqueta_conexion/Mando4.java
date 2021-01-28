@@ -49,6 +49,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.example.maqueta_conexion.Fmando4.botones;
+import static com.example.maqueta_conexion.Fmando4.mViewViewModel;
+
 public class Mando4 extends AppCompatActivity {
 
     static public ArrayList<Button> botones_actuales;
@@ -197,21 +200,43 @@ public class Mando4 extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         //Se pulsó boton del menu "Habilitar bluetooth"
         if (id == R.id.activar_mando){
-            // fragmentTransaction = fragmentManager.beginTransaction();
-
             fragmentTransaction.replace(R.id.constraint4, fmando4Activado,"Fmando4");
             fragmentTransaction.commit();
             pruebas.setText("Holi!");
-            if (botones_actuales.size()>0){
-                //Mando4.mViewViewModel.borrarTodo();
-                for(int i=0;i<botones_actuales.size();i++){
+            for (int i = 0; i < botones.size(); i++) {
+                com.example.maqueta_conexion.Botones actualizador = botones.get(i);
+                switch (actualizador.mBoton) {
+                    case "boton":
+                        for (int j = 0; j < botones_actuales.size(); j++) {
+                            com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) botones_actuales.get(j).getTag();
+                            if (auxiliar.getId() == actualizador.getId()) {
+                                actualizador.setX(botones_actuales.get(j).getX());
+                                actualizador.setY(botones_actuales.get(j).getY());
+                                mViewViewModel.añadeBoton(actualizador);
+                            }
+                        }
+                        break;
+                    case "terminal":
+                        for (int j = 0; j < terminales_actuales.size(); j++) {
+                            com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) terminales_actuales.get(j).getTag();
+                            if (auxiliar.getId() == actualizador.getId()) {
+                                actualizador.setX(terminales_actuales.get(j).getX());
+                                actualizador.setY(terminales_actuales.get(j).getY());
+                                mViewViewModel.añadeBoton(actualizador);
+                            }
+                        }
+                        break;
+                }
+
+            }
+          /*  if (botones_actuales.size()>0){
+                    for(int i=0;i<botones_actuales.size();i++){
                     com.example.maqueta_conexion.Botones actualizador=Fmando4.botones.get(i);
                     actualizador.setX(botones_actuales.get(i).getX());
                     actualizador.setY(botones_actuales.get(i).getY());
                     Fmando4.mViewViewModel.añadeBoton(actualizador);
                 }
-            }
-
+            }*/
         }
         if (id == R.id.modo_editar){
             Fragment fragment = getSupportFragmentManager().findFragmentByTag("Fmando4");
@@ -223,12 +248,7 @@ public class Mando4 extends AppCompatActivity {
             conectar_mando=4;
             Intent intentBluetoothActivity =new Intent(this, BluetoothMainActivity.class);
             startActivity(intentBluetoothActivity);
-
         }
-
-
-
-
         return super.onOptionsItemSelected(item);
 
     }

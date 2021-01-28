@@ -99,7 +99,6 @@ public class TerminalesEditar extends Fragment {
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 GeneralDialogFragment generalDialogFragment =
                         GeneralDialogFragment.newInstance("CONFIGURAR BOTON", "message", c.getId());
                 generalDialogFragment.show(getParentFragmentManager(), "dialog");

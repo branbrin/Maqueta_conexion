@@ -1,8 +1,10 @@
 package com.example.maqueta_conexion;
 
+import android.content.ClipData;
 import android.os.Bundle;
 //import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -24,6 +26,10 @@ public class Fbotones extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     Button mButon;
     Button boton;
+    static String actualizCab;
+    static String actualizMen;
+    static TextView mensaje;
+  static  TextView cabecero;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -77,12 +83,27 @@ public class Fbotones extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         boton = view.findViewById(R.id.configcab);
         EditText etcab=view.findViewById(R.id.popup_botones);
-        TextView mensaje=view.findViewById(R.id.mensaje);
-        TextView cabecero=view.findViewById(R.id.cabecero);
+        mensaje=view.findViewById(R.id.mensaje);
+        cabecero=view.findViewById(R.id.cabecero);
         Botones b=(Botones) mButon.getTag();
         mensaje.setText("Mensaje:  "+ b.getMensaje());
         cabecero.setText("Cabecero:  "+ b.getCabecero());
 
+boton.setOnTouchListener(new View.OnTouchListener() {
+    @Override
+    public boolean onTouch(View view1, MotionEvent motionEvent){
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            GeneralDialogFragment generalDialogFragment =
+                    GeneralDialogFragment.newInstance("CONFIGURAR BOTON", "message",b.getId());
+            generalDialogFragment.show(getParentFragmentManager(),"dialog");
+            return true;
+        } else {
+            return false;
+        }
+    }
+});
+
+       /*
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +116,6 @@ public class Fbotones extends Fragment {
                 generalDialogFragment.show(getParentFragmentManager(),"dialog");
 
 
-
                // Mando4.dialog.show();
                // Dialog dialog_botones=new Dialog(getActivity());
               //  dialog_botones.show();
@@ -104,9 +124,25 @@ public class Fbotones extends Fragment {
                // fragmentTransaction.replace(R.id.paneles, fragPopupBotones );
                // fragmentTransaction.commit();
             }
+
+
         });
+        mensaje.setText("Mensaje:  "+ actualizMen);
+        cabecero.setText("Cabecero:  "+ actualizCab);
+*/
+
+    }
+   static public void actualizar(String cabecer,String mensaj){
+        mensaje.setText(mensaj);
+        cabecero.setText(cabecer);
+
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
+
+    }
 }

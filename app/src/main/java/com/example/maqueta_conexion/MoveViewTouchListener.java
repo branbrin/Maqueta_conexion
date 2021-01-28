@@ -95,7 +95,6 @@ public class MoveViewTouchListener  implements View.OnTouchListener{
             if (event.getActionMasked()==MotionEvent.ACTION_UP){
                 Fmando4.borrar.setVisibility(View.INVISIBLE);
             }
-           // mensaje.setText();
             return true;
 
         }

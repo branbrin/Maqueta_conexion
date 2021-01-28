@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class GeneralDialogFragment extends BaseDialogFragment<GeneralDialogFragment.OnDialogFragmentClickListener> {
 
@@ -48,80 +49,18 @@ public class GeneralDialogFragment extends BaseDialogFragment<GeneralDialogFragm
                 String fin=etfinal.getText().toString();
                 String cab=etcab.getText().toString();
                 String men=etmen.getText().toString()+fin;
-
-
+                Fbotones.actualizCab=cab;
+                Fbotones.actualizMen=men;
 
                 b.setCabecero(cab);
                 b.setMensaje(men);
                 Fmando4.mViewViewModel.añadeBoton(b);
-
-
-
-              /*  Fragment fragment = getParentFragment().getParentFragmentManager().findFragmentByTag("Fmando4");
-                if(fragment != null) {
-                    getParentFragment().getParentFragmentManager().beginTransaction().remove(fragment).commit();
-                }
-                FragmentManager fragmentManager = getParentFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.constraintLayout4, new Fmando4(),"Fmando4" );
-                fragmentTransaction.commit();
-*/
-
+                Fbotones.actualizar(cab,men);
                 dismiss();
             }
         });
-       /*         .setMessage(getArguments().getString("msg"))
-                .setCancelable(false)
-                .setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // Positive button clicked
-                                // getActivityInstance().onOkClicked(GeneralDialogFragment.this);
-                            }
-                        }
-                )
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // negative button clicked
-                                //  getActivityInstance().onCancelClicked(GeneralDialogFragment.this);
-                            }
-                        }
-                )
-                .create();
 
-        */
         return view;
     }
-    // Create a Dialog using default AlertDialog builder , if not inflate custom view in onCreateView
-  /*  @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        return new AlertDialog.Builder(getActivity())
-                .setTitle(getArguments().getString("title"))
-                .setMessage(getArguments().getString("msg"))
-                .setCancelable(false)
-                .setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                    @Override
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // Positive button clicked
-                               // getActivityInstance().onOkClicked(GeneralDialogFragment.this);
-                            }
-                        }
-                )
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                    @Override
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // negative button clicked
-                              //  getActivityInstance().onCancelClicked(GeneralDialogFragment.this);
-                            }
-                        }
-                )
-             .create();
-   }
-*/
 }
