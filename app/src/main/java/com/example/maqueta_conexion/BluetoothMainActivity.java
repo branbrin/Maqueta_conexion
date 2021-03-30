@@ -20,6 +20,7 @@ import android.os.Parcelable;
 //import android.support.annotation.RequiresApi;
 //import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.service.autofill.CharSequenceTransformation;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,8 +35,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import com.example.maqueta_conexion.fragmentosMandos.Fmando4Activado;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,8 +52,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 
-
-
+import static com.example.maqueta_conexion.Fmando4.mViewViewModel;
 
 
 public class BluetoothMainActivity extends AppCompatActivity {
@@ -56,7 +61,9 @@ public class BluetoothMainActivity extends AppCompatActivity {
 
 
     //DECLARACIÓN DE VARIABLES
-    static BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    public static BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    public static Boolean BT_conectado;
+    public static String BT_id;
     static ListView listViewEmparejados;
     static ListView listViewBuscados;
     static ListaPulsable listaPulsable;
@@ -66,15 +73,17 @@ public class BluetoothMainActivity extends AppCompatActivity {
     static ConnectedThread connectedThread;
     static Handler bluetoothHandler;
     static Handler estadoHandler;
+    static Handler pantallaHandler;
     static TextView datos;
     static TextView estado;
-    static ConnectThread connectThread;
+    public static ConnectThread connectThread;
     static AcceptThread acceptThread;
     boolean espera_consigna=false;
+    boolean recibir=false;
     String consigna="";
     static byte[] recibido;
     ArrayList trama = new ArrayList<Character>();
-
+    FragmentManager fragmentManager= this.getSupportFragmentManager();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,16 +101,20 @@ public class BluetoothMainActivity extends AppCompatActivity {
         estado= findViewById(R.id.estado2);
         datos= findViewById(R.id.tv);
         datos.setMovementMethod(new ScrollingMovementMethod());
+        BT_conectado=false;
 
 
         //-->Utilidades
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothDevice.ACTION_UUID);
+        filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         registerReceiver(receiver, filter); // Don't forget to unregister during onDestroy
         Intent intent = getIntent();
         bluetoothHandler= new BluetoothHandler();
         estadoHandler= new Handler();
+        pantallaHandler=new Handler();
         actualizaestado.run();
     }
 
@@ -266,6 +279,14 @@ public class BluetoothMainActivity extends AppCompatActivity {
                     }
                 }
             }
+            if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
+            //Device is now connected
+                BT_conectado=true;
+            }
+            if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+            //Device has disconnected
+                BT_conectado=false;
+            }
         }
     };
     //---------------FIN BROADCASTER RECEIVER----------------------------------------------------
@@ -374,6 +395,7 @@ public class BluetoothMainActivity extends AppCompatActivity {
             tvNombre.setText(user.nombre);
             tvId.setText(user.id);
 
+
             //activo o desactivo el progresBar
             if (user.progresBar){
                 progressBar.setVisibility(View.VISIBLE);
@@ -398,11 +420,20 @@ public class BluetoothMainActivity extends AppCompatActivity {
                     }
                     connectThread = new ConnectThread(device);
                     connectThread.start();
-                    if (Mando4.conectar_mando==4){
-                        Intent intentMando4 =new Intent(BluetoothMainActivity.this, Mando4.class);
+                    if (Mando4.conectar_mando==4) {
+                        Intent intentMando4 = new Intent(BluetoothMainActivity.this, Mando4.class);
+                        Mando4.conectar_mando = -1;
+                        BT_id=user.id;
+                        startActivity(intentMando4);
+                  /*  }else if(Mando4.conectar_mando==11){
+                        Intent intentMando4 =new Intent(BluetoothMainActivity.this, Fmando4Activado.class);
                         Mando4.conectar_mando=-1;
                         startActivity(intentMando4);
-                    }else {
+                    }
+
+*/
+                    }
+                    else {
                         Intent intentMotor =new Intent(BluetoothMainActivity.this, MotorActivity.class);
                         intentMotor.putExtra("bluto",user.id);
                         startActivity(intentMotor);
@@ -582,6 +613,7 @@ public class BluetoothMainActivity extends AppCompatActivity {
                     // Send the obtained bytes to the UI activity
                     bluetoothHandler.obtainMessage(Constantes.MESSAGE_READ, data, -1).sendToTarget();
 
+
                 } catch (IOException e) {
                     break;
                 }
@@ -695,6 +727,41 @@ public class BluetoothMainActivity extends AppCompatActivity {
                 if (MotorActivity.pantalla!=null){
                     MotorActivity.pantalla.setText(""+MotorActivity.pantalla.getText()+(char)mensaje.arg1+" ");
                 }
+               char msg=(char)mensaje.arg1;
+                if (Fmando4Activado.pantallasActivas!=null){
+                    for (int i =0; i<Fmando4Activado.pantallasActivas.size();i++) {
+                        Botones pAux =(Botones) Fmando4Activado.pantallasActivas.get(i).getTag();
+                        Botones p=Fmando4.mViewViewModel.getBoton(pAux.getId());
+                        if (p.getIDaux()==R.id.radioRecibido || p.getIDaux() ==R.id.radioAmbos){
+                            if (p.getMensaje().equals("SINCARACTER")){
+                                Fmando4Activado.pantallasActivas.get(i).setText(Fmando4Activado.pantallasActivas.get(i).getText()+String.valueOf(msg));
+                            }else {
+                                if (recibir){
+                                    if (p.getMensaje().equals(String.valueOf(msg))){
+                                        recibir=false;
+                                        mViewViewModel.añadeBoton(p);
+                                        Fmando4Activado.pantallasActivas.get(i).setText(Fmando4Activado.pantallasActivas.get(i).getText()+"\n");
+
+                                    }else{
+                                        Fmando4Activado.pantallasActivas.get(i).setText(Fmando4Activado.pantallasActivas.get(i).getText()+String.valueOf(msg));
+                                    }
+                                }
+                                else{
+                                    if (p.getMensaje().equals(String.valueOf(msg))){
+                                        recibir=true;
+                                        mViewViewModel.añadeBoton(p);
+                                    }
+
+                                }
+                            }
+
+
+                        }
+                        // TextView a= (TextView) context.getResources().getLayout(R.layout.pantalla);
+                        // a.setText(tipo.toString());
+
+                    }
+                }
 
                 gestionar_mensaje(mensaje.arg1);
             }
@@ -773,6 +840,45 @@ public class BluetoothMainActivity extends AppCompatActivity {
     public static void gestionBoton(byte[] tipo){
         if (BluetoothMainActivity.connectThread.mmSocket!=null){
             BluetoothMainActivity.connectedThread.write(tipo);
+            for (int i =0; i<Mando4.pantallas_actuales.size();i++) {
+                Mando4.pantallas_actuales.get(i).setText(tipo.toString());
+
+
+            }
+
+        }
+    }
+
+    public static void envioTrama(byte[] tipo){
+        if (BluetoothMainActivity.connectThread.mmSocket!=null){
+            BluetoothMainActivity.connectedThread.write(tipo);
+            String a="";
+            for (int i=0;i<tipo.length;i++) {
+                a = a + (char) tipo[i];
+            }
+            for (int i =0; i<Fmando4Activado.pantallasActivas.size();i++) {
+              // TextView a= (TextView) context.getResources().getLayout(R.layout.pantalla);
+              // a.setText(tipo.toString());
+               Botones pAux =(Botones) Fmando4Activado.pantallasActivas.get(i).getTag();
+               Botones p=Fmando4.mViewViewModel.getBoton(pAux.getId());
+               if (p.getIDaux()==R.id.radioEnviado || p.getIDaux() ==R.id.radioAmbos){
+
+                   Fmando4Activado.pantallasActivas.get(i).setText(Fmando4Activado.pantallasActivas.get(i).getText()+a);
+               }
+
+
+                }
+
+
+               // pantallaHandler.obtainMessage(Constantes.PANTALLA_READ, -1, -1,tipo).sendToTarget();
+               // Mando4.pantallas_actuales.get(i).setText(tipo.toString());
+
+
+
+
+
+
+
         }
     }
     public void intento(View view){

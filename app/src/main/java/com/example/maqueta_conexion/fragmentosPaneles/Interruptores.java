@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.maqueta_conexion.MyTouchListener;
 import com.example.maqueta_conexion.R;
 
 /**
@@ -61,5 +62,19 @@ public class Interruptores extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_interruptores, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
+        view.findViewById(R.id.switch1).setOnTouchListener(new MyTouchListener());
+        view.findViewById(R.id.switch2).setOnTouchListener(new MyTouchListener());
+
+
+
+
+
+
+
     }
 }

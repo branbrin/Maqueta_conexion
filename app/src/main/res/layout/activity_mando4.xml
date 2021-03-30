@@ -11,11 +11,12 @@
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="200dp"
+        android:layout_width="198dp"
         android:layout_height="300dp"
+        android:background="@drawable/black_shape_fondo_azul_cuadrado"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/borde">
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -124,10 +125,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layouteditar"
-        android:layout_width="200dp"
+        android:layout_width="198dp"
 
         android:layout_height="0dp"
-        android:background="@drawable/borde"
+        android:background="@drawable/black_shape_fondo_azul_cuadrado"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView2">
@@ -152,14 +153,17 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
         android:id="@+id/paneles"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/borde"
+        android:background="@drawable/black_shape_fondo_azul_cuadrado"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/scrollView2"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout4"
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/TVpruebas"

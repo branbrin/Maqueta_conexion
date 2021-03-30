@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/configura_terminal"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fbotones" >
 
+    android:scrollbars="vertical"
+    tools:context=".EditarInterruptor" >
     <TextView
         android:id="@+id/textView17"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
+
+
         android:text="Interruptor"
         android:gravity="center_horizontal"
         android:textColor="#000000"
@@ -32,7 +37,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/boton_configtermi"
+            android:id="@+id/boton_configinterruptor"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:text="EDITAR"
@@ -80,7 +85,7 @@
                     app:layout_constraintVertical_bias="0.571" />
 
                 <TextView
-                    android:id="@+id/terminal_cabecero"
+                    android:id="@+id/tv_posini"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="116dp"
@@ -118,7 +123,7 @@
                     app:layout_constraintVertical_bias="0.571" />
 
                 <TextView
-                    android:id="@+id/terminal_mensaje"
+                    android:id="@+id/tv_envio_on"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="116dp"
@@ -155,7 +160,7 @@
                     app:layout_constraintVertical_bias="0.571" />
 
                 <TextView
-                    android:id="@+id/terminal_final"
+                    android:id="@+id/tv_envio_off"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="116dp"
@@ -175,3 +180,4 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

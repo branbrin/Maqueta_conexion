@@ -12,33 +12,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TerminalesEditar#newInstance} factory method to
+ * Use the {@link EditarPantalla#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TerminalesEditar extends Fragment {
+public class EditarPantalla extends Fragment {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    ConstraintLayout mTermi;
-    static TextView mensaje;
-    static TextView cabecero;
-    static TextView ultimo;
-
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    TextView mPantalla;
+   static TextView pantallaIdentificador;
+   static TextView pantallaModo;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public TerminalesEditar() {
+    public EditarPantalla() {
         // Required empty public constructor
     }
-
-    public TerminalesEditar(ConstraintLayout constraintLayout) {
-        mTermi = constraintLayout;
+    public EditarPantalla(TextView textView) {
+        mPantalla = textView;
     }
 
     /**
@@ -47,11 +44,11 @@ public class TerminalesEditar extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment TerminalesEditar.
+     * @return A new instance of fragment EditarPantalla.
      */
     // TODO: Rename and change types and number of parameters
-    public static TerminalesEditar newInstance(String param1, String param2) {
-        TerminalesEditar fragment = new TerminalesEditar();
+    public static EditarPantalla newInstance(String param1, String param2) {
+        EditarPantalla fragment = new EditarPantalla();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -72,55 +69,53 @@ public class TerminalesEditar extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_terminales_editar, container, false);
+        return inflater.inflate(R.layout.fragment_editar_pantalla, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button boton = view.findViewById(R.id.boton_configtermi);
-        EditText etcab = view.findViewById(R.id.popup_botones);
-
-        mensaje = view.findViewById(R.id.terminal_mensaje);
-        cabecero = view.findViewById(R.id.terminal_cabecero);
-        ultimo = view.findViewById(R.id.terminal_final);
-
-        Botones caux = (Botones) mTermi.getTag();
+        Button boton = view.findViewById(R.id.boton_configpantalla);
+        pantallaIdentificador = view.findViewById(R.id.pant_id);
+        pantallaModo = view.findViewById(R.id.modo_pantalla);
+        Botones caux = (Botones) mPantalla.getTag();
         Botones c=Fmando4.mViewViewModel.getBoton(caux.getId());
-        if (c!=null){
-            mensaje.setText("" + c.getMensaje());
-            cabecero.setText("" + c.getCabecero());
-            ultimo.setText("" + c.getUltimo());
+        pantallaIdentificador.setText(""+c.getMensaje());
+        if (c.getIDaux() == R.id.radioRecibido) {
+            pantallaModo.setText("RECIBIR");
+        } else if (c.getIDaux() == R.id.radioEnviado) {
+            pantallaModo.setText("ENVIAR");
+        }
+        else if(c.getIDaux() == R.id.radioAmbos){
+            pantallaModo.setText("AMBOS");
         }
 
-        /*String s = c.getMensaje();
-        if (s.length()>1){
-            String m = s.substring(0, s.length() - 2);
-            String u = s.substring(s.length() - 1);
-            mensaje.setText("Mensaje:  " + m);
-            cabecero.setText("Cabecero:  " + c.getCabecero());
-            ultimo.setText("Final: " + u);
-        }else {
-            mensaje.setText("Mensaje: sin datos" );
-            cabecero.setText("Cabecero:  " + c.getCabecero());
-            ultimo.setText("Final: sin datos" );
-        }
 
-*/
+
+
 
 
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GeneralDialogFragment generalDialogFragment =
-                        GeneralDialogFragment.newInstance("CONFIGURAR BOTON", "message", c.getId(),R.layout.popup_botones);
+                        GeneralDialogFragment.newInstance("CONFIGURAR PANTALLA", "message", c.getId(), R.layout.popup_pantalla);
                 generalDialogFragment.show(getParentFragmentManager(), "dialog");
+
+
             }
         });
     }
-    static public void actualizarTermi(String cabecer,String mensaj, String ultim){
-        mensaje.setText(""+mensaj);
-        cabecero.setText(""+cabecer);
-        ultimo.setText("" +ultim);
+    static public void actualizarPantalla(int IDaux, String identificador) {
+        if (IDaux == R.id.radioRecibido) {
+            pantallaModo.setText("RECIBIR");
+        } else if (IDaux == R.id.radioEnviado) {
+            pantallaModo.setText("ENVIAR");
+        }else if(IDaux==R.id.radioAmbos){
+            pantallaModo.setText("AMBOS");
+        }
+
+        pantallaIdentificador.setText(identificador);
+
     }
 }

@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Botones.class}, version = 3, exportSchema = false)
+@Database(entities = {Botones.class}, version = 5, exportSchema = false)
 public abstract class ViewRoomDatabase extends RoomDatabase {
     public abstract BotonesDao botonesDao();
 

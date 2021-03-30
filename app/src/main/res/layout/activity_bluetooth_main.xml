@@ -10,7 +10,7 @@
         android:id="@+id/pantallas"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="240dp"
         android:background="@drawable/borde"
         android:longClickable="false"
         android:measureAllChildren="false"
@@ -21,66 +21,66 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:showDividers="middle"
-            android:divider="@drawable/horiz_divider">
+            android:divider="@drawable/horiz_divider"
+            android:showDividers="middle">
+
 
             <ImageView
                 android:id="@+id/image6"
-                android:layout_width="150dp"
+                android:layout_width="450dp"
                 android:layout_height="match_parent"
-                android:onClick="botonMotor6"
-                android:background="@drawable/borde"/>
-
+                android:background="@drawable/borde"
+                android:onClick="botonMotor6" />
 
             <ImageView
                 android:id="@+id/image5"
-                android:layout_width="150dp"
+                android:layout_width="450dp"
                 android:layout_height="match_parent"
-                android:onClick="botonMotor5"
-                android:background="@drawable/borde"/>
+                android:background="@drawable/borde"
+                android:onClick="botonMotor5" />
 
             <ImageView
                 android:id="@+id/image4"
-                android:layout_width="150dp"
+                android:layout_width="450dp"
                 android:layout_height="match_parent"
 
-                android:onClick="botonMotor4"
+                android:background="@drawable/borde"
 
-                android:background="@drawable/borde"/>
+                android:onClick="botonMotor4" />
+
             <ImageView
                 android:id="@+id/image3"
-                android:layout_width="150dp"
+                android:layout_width="450dp"
                 android:layout_height="match_parent"
 
-                android:onClick="botonMotor3"
+                android:background="@drawable/borde"
 
-                android:background="@drawable/borde"/>
+                android:onClick="botonMotor3" />
 
 
             <ImageView
                 android:id="@+id/image2"
-                android:layout_width="150dp"
+                android:layout_width="450dp"
                 android:layout_height="match_parent"
 
-                android:onClick="botonMotor2"
+                android:background="@drawable/borde"
 
-                android:background="@drawable/borde"/>
-
+                android:onClick="botonMotor2" />
 
 
             <ImageView
                 android:id="@+id/image1"
-                android:layout_width="140dp"
+                android:layout_width="450dp"
                 android:layout_height="match_parent"
-                android:onClick="botonMotor"
-                android:background="@drawable/borde"/>
+                android:background="@drawable/borde"
+                android:onClick="botonMotor" />
 
             <ImageView
                 android:id="@+id/image0"
-                android:layout_width="140dp"
+                android:layout_width="450dp"
                 android:layout_height="match_parent"
-                android:onClick="botonMotor0"
-                android:background="@drawable/borde"/>
+                android:background="@drawable/borde"
+                android:onClick="botonMotor0" />
         </LinearLayout>
 
 
@@ -107,12 +107,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="44dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:onClick="botonMotor"
         android:text="Motor"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.262"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/botonBluetooth" />
 

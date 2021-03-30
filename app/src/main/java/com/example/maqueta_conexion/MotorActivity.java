@@ -222,18 +222,18 @@ public class MotorActivity extends AppCompatActivity {
     }
 
     public void botonbluto(View view) {
-        String fin ="F";
+       String fin ="F";
        String comAT = String.valueOf("bAT"+ETbluto.getText()+"F");
        // MotorActivity.pruebas.setText(""+comAT.getBytes());
        BluetoothMainActivity.gestionBoton(comAT.getBytes());
        BluetoothMainActivity.connectThread.cancel();
-        BluetoothDevice device = BluetoothMainActivity.mBluetoothAdapter.getRemoteDevice(id);
-        BluetoothMainActivity.connectThread = new BluetoothMainActivity.ConnectThread(device);
+       BluetoothDevice device = BluetoothMainActivity.mBluetoothAdapter.getRemoteDevice(id);
+       BluetoothMainActivity.connectThread = new BluetoothMainActivity.ConnectThread(device);
 
         int loop =0;
 
             try {
-                sleep(5000);
+                sleep(15000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
 

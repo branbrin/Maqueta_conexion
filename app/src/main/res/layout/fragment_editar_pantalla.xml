@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/configura_terminal"
+    android:id="@+id/configura_pantalla"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fbotones" >
@@ -32,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/boton_configtermi"
+            android:id="@+id/boton_configpantalla"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:text="EDITAR"
@@ -73,26 +73,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Posición inicial:"
+                    android:text="Modo:"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.571" />
 
                 <TextView
-                    android:id="@+id/terminal_cabecero"
+                    android:id="@+id/modo_pantalla"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="116dp"
                     android:layout_marginLeft="116dp"
-                    android:text="-"
-                    android:padding="1dp"
-                    android:gravity="center_horizontal"
-                    app:layout_constraintWidth_min="20dp"
                     android:background="@drawable/black_shape_fondo_blanco_cuadrado"
+                    android:gravity="center_horizontal"
+                    android:padding="1dp"
+                    android:text="-"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_min="20dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -111,14 +111,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Envío ON:"
+                    android:text="Identificador: "
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.571" />
 
                 <TextView
-                    android:id="@+id/terminal_mensaje"
+                    android:id="@+id/pant_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="116dp"
@@ -133,45 +133,9 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/black_shape_fondo_azul_cuadrado"
-                android:foregroundGravity="center"
-                android:padding="5dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout6">
 
-                <TextView
-                    android:id="@+id/textView23"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Envío OFF:"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.571" />
-
-                <TextView
-                    android:id="@+id/terminal_final"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="116dp"
-                    android:layout_marginLeft="116dp"
-                    android:text="-"
-                    android:gravity="center_horizontal"
-                    app:layout_constraintWidth_min="20dp"
-                    android:background="@drawable/black_shape_fondo_blanco_cuadrado"
-
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

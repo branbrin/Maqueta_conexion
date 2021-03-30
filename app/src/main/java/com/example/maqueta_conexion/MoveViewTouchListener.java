@@ -7,12 +7,15 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import static com.example.maqueta_conexion.Mando4.botones_actuales;
+import static com.example.maqueta_conexion.Mando4.pantallas_actuales;
 import static com.example.maqueta_conexion.Mando4.terminales_actuales;
 
 public class MoveViewTouchListener  implements View.OnTouchListener{
@@ -66,25 +69,55 @@ public class MoveViewTouchListener  implements View.OnTouchListener{
               break;
           case "terminal":
               ConstraintLayout c = (ConstraintLayout) v;
-              //Mando4.mViewViewModel.borrarTodo();
-              // Fmando4.botones=Fmando4.mViewViewModel.getAllBotones();
-
-           /* Mando4.pruebas.setText("");
-            for (int i=0;i<Mando4.botones.length;i++){
-                Mando4.pruebas.setText(""+Mando4.pruebas.getText()+Mando4.botones[i].getBoton());
-            }
-
-            */
 
               TerminalesEditar  editarTerminal=new TerminalesEditar(c);
               FragmentTransaction fragmentTransaction2 = mManag.beginTransaction();
               fragmentTransaction2.replace(R.id.layouteditar, editarTerminal );
-
               fragmentTransaction2.commit();
-
               if(c.getX()>760&c.getY()>230){
                   c.setVisibility(View.INVISIBLE);
                   terminales_actuales.remove(c);
+                  Fmando4.mViewViewModel.borraBoton(bot);
+              }
+              break;
+          case "pantalla":
+              TextView t = (TextView) v;
+              EditarPantalla  editarPantalla=new EditarPantalla(t);
+              FragmentTransaction fragmentTransaction3 = mManag.beginTransaction();
+              fragmentTransaction3.replace(R.id.layouteditar, editarPantalla );
+              fragmentTransaction3.commit();
+
+              if(t.getX()>760&t.getY()>230){
+                  t.setVisibility(View.INVISIBLE);
+                  pantallas_actuales.remove(t);
+                  Fmando4.mViewViewModel.borraBoton(bot);
+              }
+              break;
+
+          case "terminalBT":
+              ConstraintLayout d = (ConstraintLayout) v;
+
+              TerminalesEditar  editarTerminalBT=new TerminalesEditar(d);
+              FragmentTransaction fragmentTransaction4 = mManag.beginTransaction();
+              fragmentTransaction4.replace(R.id.layouteditar, editarTerminalBT );
+              fragmentTransaction4.commit();
+              if(d.getX()>760&d.getY()>230){
+                  d.setVisibility(View.INVISIBLE);
+                  Mando4.terminalesBT_actuales.remove(d);
+                  Fmando4.mViewViewModel.borraBoton(bot);
+              }
+              break;
+
+          case "interruptor":
+              Switch e = (Switch) v;
+
+              EditarInterruptor  editarInterruptor=new EditarInterruptor(e);
+              FragmentTransaction fragmentTransaction5 = mManag.beginTransaction();
+              fragmentTransaction5.replace(R.id.layouteditar, editarInterruptor);
+              fragmentTransaction5.commit();
+              if(e.getX()>760&e.getY()>230){
+                  e.setVisibility(View.INVISIBLE);
+                  Mando4.interruptores_actuales.remove(e);
                   Fmando4.mViewViewModel.borraBoton(bot);
               }
               break;

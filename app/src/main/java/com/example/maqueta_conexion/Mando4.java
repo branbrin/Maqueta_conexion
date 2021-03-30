@@ -1,6 +1,8 @@
 package com.example.maqueta_conexion;
 
 //import android.arch.lifecycle.ViewModelProvider;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +14,9 @@ import android.graphics.Color;
 //import android.support.v4.app.FragmentTransaction;
 //import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.ParcelUuid;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -48,7 +54,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
+import static com.example.maqueta_conexion.BluetoothMainActivity.*;
 import static com.example.maqueta_conexion.Fmando4.botones;
 import static com.example.maqueta_conexion.Fmando4.mViewViewModel;
 
@@ -56,6 +64,10 @@ public class Mando4 extends AppCompatActivity {
 
     static public ArrayList<Button> botones_actuales;
     static public ArrayList<ConstraintLayout> terminales_actuales;
+    static public ArrayList<TextView> pantallas_actuales;
+    static public ArrayList<ConstraintLayout> terminalesBT_actuales;
+    static public ArrayList<Switch> interruptores_actuales;
+
 
     public static int conectar_mando=-1;
     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -127,7 +139,7 @@ public class Mando4 extends AppCompatActivity {
        // testItem.setOnTouchListener(new MoveViewTouchListener(testItem));
        // constraintLayout=findViewById(R.id.constraintLayout4);
        // constraintLayout.setOnDragListener(new MyDragListener());
-     //   View cosa = new View(this);
+       //   View cosa = new View(this);
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.constraintLayout4, new Fmando4(),"fmando4" );
@@ -222,6 +234,39 @@ public class Mando4 extends AppCompatActivity {
                             if (auxiliar.getId() == actualizador.getId()) {
                                 actualizador.setX(terminales_actuales.get(j).getX());
                                 actualizador.setY(terminales_actuales.get(j).getY());
+                                mViewViewModel.añadeBoton(actualizador);
+                            }
+                        }
+                        break;
+
+                    case "pantalla":
+                        for (int j = 0; j < pantallas_actuales.size(); j++) {
+                            com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) pantallas_actuales.get(j).getTag();
+                            if (auxiliar.getId() == actualizador.getId()) {
+                                actualizador.setX(pantallas_actuales.get(j).getX());
+                                actualizador.setY(pantallas_actuales.get(j).getY());
+                                mViewViewModel.añadeBoton(actualizador);
+                            }
+                        }
+                        break;
+
+                    case "terminalBT":
+                        for (int j = 0; j < terminalesBT_actuales.size(); j++) {
+                            com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) terminalesBT_actuales.get(j).getTag();
+                            if (auxiliar.getId() == actualizador.getId()) {
+                                actualizador.setX(terminalesBT_actuales.get(j).getX());
+                                actualizador.setY(terminalesBT_actuales.get(j).getY());
+                                mViewViewModel.añadeBoton(actualizador);
+                            }
+                        }
+                        break;
+
+                    case "interruptor":
+                        for (int j = 0; j < interruptores_actuales.size(); j++) {
+                            com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) interruptores_actuales.get(j).getTag();
+                            if (auxiliar.getId() == actualizador.getId()) {
+                                actualizador.setX(interruptores_actuales.get(j).getX());
+                                actualizador.setY(interruptores_actuales.get(j).getY());
                                 mViewViewModel.añadeBoton(actualizador);
                             }
                         }
@@ -335,7 +380,7 @@ public class Mando4 extends AppCompatActivity {
 
 
         //obtener bitmap
-        ConstraintLayout layout= findViewById(R.id.constraint4);
+        ConstraintLayout layout= findViewById(R.id.constraintLayout4);
         Bitmap bmp = screenShot(layout);
         MainActivity.imageView4.setImageBitmap(bmp);
         //convertir bitmap a Byte[]
@@ -368,9 +413,6 @@ public class Mando4 extends AppCompatActivity {
         Botones botones = new Botones();
         TextView textView=(TextView)view;
         selector(textView,botones);
-
-
-
     }
   /*  protected void onResume(){
         super.onResume();
@@ -449,24 +491,25 @@ public class Mando4 extends AppCompatActivity {
 
     public  void selector (TextView textView, Fragment fragment){
 
-        panelTexto.setBackgroundColor(Color.WHITE);
-        panelBotones.setBackgroundColor(Color.WHITE);
-        panelInterruptores.setBackgroundColor(Color.WHITE);
-        panelSlider.setBackgroundColor(Color.WHITE);
-        panelMandos.setBackgroundColor(Color.WHITE);
-        panelIndicadores.setBackgroundColor(Color.WHITE);
-        panelGraficos.setBackgroundColor(Color.WHITE);
-        panelAcelerometro.setBackgroundColor(Color.WHITE);
-        panelTerminales.setBackgroundColor(Color.WHITE);
-        panelTamañomalla.setBackgroundColor(Color.WHITE);
-        panelMalla.setBackgroundColor(Color.WHITE);
-        panelCosas.setBackgroundColor(Color.WHITE);
+        panelTexto.setBackgroundColor(0x80C9CC);
+        panelBotones.setBackgroundColor(0x80C9CC);
+        panelInterruptores.setBackgroundColor(0x80C9CC);
+        panelSlider.setBackgroundColor(0x80C9CC);
+        panelMandos.setBackgroundColor(0x80C9CC);
+        panelIndicadores.setBackgroundColor(0x80C9CC);
+        panelGraficos.setBackgroundColor(0x80C9CC);
+        panelAcelerometro.setBackgroundColor(0x80C9CC);
+        panelTerminales.setBackgroundColor(0x80C9CC);
+        panelTamañomalla.setBackgroundColor(0x80C9CC);
+        panelMalla.setBackgroundColor(0x80C9CC);
+        panelCosas.setBackgroundColor(0x80C9CC);
         textView.setBackgroundColor(Color.YELLOW);
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.paneles, fragment );
         fragmentTransaction.commit();
     }
+
 
 
 

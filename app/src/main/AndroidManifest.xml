@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- TODO 1.1 Permiso de localizacion -->
     <!-- Es necesario para poder realizar busquedas -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+
 
     <application
 
@@ -24,25 +25,26 @@
         <activity android:name=".Mando5" />
         <activity
             android:name=".Mando4"
-            android:screenOrientation="landscape"
-           />
-        <activity android:name=".mando3" />
-        <activity
-            android:name=".Mando2"
-            android:label="@string/title_activity_mando2"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Mando1" />
-        <activity android:name=".MotorActivity" />
-        <activity android:name=".BluetoothMainActivity" />
-        <activity android:name=".MainActivity">
+            android:screenOrientation="landscape" />
+        <!-- android:screenOrientation="landscape"  />-->
+
+    <activity android:name=".mando3" />
+    <activity
+        android:name=".Mando2"
+        android:label="@string/title_activity_mando2"
+        android:theme="@style/AppTheme.NoActionBar" />
+    <activity android:name=".Mando1"/>
+    <activity android:name=".MotorActivity" />
+    <activity android:name=".BluetoothMainActivity"/>
+    <activity android:name=".MainActivity">
 
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+</application>
 
 </manifest>

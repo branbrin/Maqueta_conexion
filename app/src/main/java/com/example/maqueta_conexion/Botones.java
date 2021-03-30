@@ -23,6 +23,11 @@ public class Botones {
     public String mCabecero;
     @ColumnInfo(name="mensaje")
     public String mMensaje;
+    @ColumnInfo(name="final")
+    public String mUltimo;
+    @ColumnInfo(name="IDaux")
+    public int mIDaux;
+
 
     //Constructor de clase:
     public Botones(String boton) {
@@ -46,6 +51,12 @@ public class Botones {
     public String getMensaje(){return this.mMensaje;}
     public void setMensaje(String mensaje){mMensaje=mensaje;}
 
+    public String getUltimo(){return this.mUltimo;}
+    public void setFinal(String ultimo){mUltimo=ultimo;}
+
     public int getId(){return this.mID;}
     public void setId(int Id){mID=Id;}
+
+    public int getIDaux(){return this.mIDaux;}
+    public void setIDaux(int Idaux){mIDaux=Idaux;}
 }
