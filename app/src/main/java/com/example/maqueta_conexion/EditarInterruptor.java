@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import static com.example.maqueta_conexion.MainActivity.mViewViewModel;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link EditarInterruptor#newInstance} factory method to
@@ -79,33 +81,67 @@ public class EditarInterruptor extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button boton = view.findViewById(R.id.boton_configinterruptor);
-        Botones caux = (Botones) mSwitch.getTag();
-        Botones c = Fmando4.mViewViewModel.getBoton(caux.getId());
-        TVposIni = view.findViewById(R.id.tv_posini);
-        TVenvioON = view.findViewById(R.id.tv_envio_on);
-        TVenvioOff = view.findViewById(R.id.tv_envio_off);
-        if (c != null) {
-            if (c.getIDaux() == R.id.radioOn) {
-                TVposIni.setText("ON");
-            } else if (c.getIDaux() == R.id.radioOff) {
-                TVposIni.setText("OFF");
-            }
 
-            TVenvioON.setText("" + c.getMensaje());
-            TVenvioOff.setText("" + c.getCabecero());
+        switch (Mando4.numeroPanel){
+            case 0:
+                Panel0 interruptorAux = (Panel0) mSwitch.getTag();
+                Panel0 interruptor = mViewViewModel.getViewByIDPanel0(interruptorAux.getId());
+                TVposIni = view.findViewById(R.id.tv_posini);
+                TVenvioON = view.findViewById(R.id.tv_envio_on);
+                TVenvioOff = view.findViewById(R.id.tv_envio_off);
+                if (interruptor != null) {
+                    if (interruptor.getIDaux() == R.id.radioOn) {
+                        TVposIni.setText("ON");
+                    } else if (interruptor.getIDaux() == R.id.radioOff) {
+                        TVposIni.setText("OFF");
+                    }
+
+                    TVenvioON.setText("" + interruptor.getMensaje());
+                    TVenvioOff.setText("" + interruptor.getCabecero());
+                }
+                boton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GeneralDialogFragment generalDialogFragment =
+                                GeneralDialogFragment.newInstance("CONFIGURAR PANTALLA", "message", interruptor.getId(), R.layout.popup_interruptor);
+                        generalDialogFragment.show(getParentFragmentManager(), "dialog");
+
+
+                    }
+                });
+                break;
+            case  4:
+                Botones caux = (Botones) mSwitch.getTag();
+                Botones c = mViewViewModel.getBoton(caux.getId());
+                TVposIni = view.findViewById(R.id.tv_posini);
+                TVenvioON = view.findViewById(R.id.tv_envio_on);
+                TVenvioOff = view.findViewById(R.id.tv_envio_off);
+                if (c != null) {
+                    if (c.getIDaux() == R.id.radioOn) {
+                        TVposIni.setText("ON");
+                    } else if (c.getIDaux() == R.id.radioOff) {
+                        TVposIni.setText("OFF");
+                    }
+
+                    TVenvioON.setText("" + c.getMensaje());
+                    TVenvioOff.setText("" + c.getCabecero());
+                }
+                boton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GeneralDialogFragment generalDialogFragment =
+                                GeneralDialogFragment.newInstance("CONFIGURAR PANTALLA", "message", c.getId(), R.layout.popup_interruptor);
+                        generalDialogFragment.show(getParentFragmentManager(), "dialog");
+
+
+                    }
+                });
+                break;
         }
 
 
-        boton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GeneralDialogFragment generalDialogFragment =
-                        GeneralDialogFragment.newInstance("CONFIGURAR PANTALLA", "message", c.getId(), R.layout.popup_interruptor);
-                generalDialogFragment.show(getParentFragmentManager(), "dialog");
 
 
-            }
-        });
     }
 
     static public void actualizarInterruptor(int IDaux, String on, String off) {
