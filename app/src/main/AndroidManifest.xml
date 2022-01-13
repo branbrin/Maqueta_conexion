@@ -14,7 +14,7 @@
 
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="HMI"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -25,6 +25,7 @@
         <activity android:name=".Mando5" />
         <activity
             android:name=".Mando4"
+
             android:screenOrientation="landscape" />
         <!-- android:screenOrientation="landscape"  />-->
 

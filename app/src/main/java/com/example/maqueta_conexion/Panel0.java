@@ -1,15 +1,13 @@
 package com.example.maqueta_conexion;
 
-import android.widget.Button;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity (tableName = "lista_botones")
+@Entity (tableName = "panel0")
 
-public class Botones {
+public class Panel0 {
 
     @PrimaryKey (autoGenerate = true)
     public int mID;
@@ -41,8 +39,10 @@ public class Botones {
     @ColumnInfo(name="IntArg4")
     public int mIntArg4;
 
+
+
     //Constructor de clase:
-    public Botones(String boton) {
+    public Panel0(String boton) {
         this.mBoton = boton;
     }
 
@@ -86,7 +86,5 @@ public class Botones {
 
     public int getIntArg4(){return this.mIntArg4;}
     public void setIntArg4(int intArg4){mIntArg4=intArg4;}
-
-
 
 }

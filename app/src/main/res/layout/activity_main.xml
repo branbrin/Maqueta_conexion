@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@drawable/black_shape_fondo_azuloscuro_cuadrado"
     tools:context=".BluetoothMainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,8 +19,8 @@
             android:id="@+id/estado"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:text="ESTADO:  "
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +30,7 @@
             android:id="@+id/estado2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
+            android:visibility="invisible"
             android:text="-------------"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +48,7 @@
         android:background="@color/colorAccent"
         android:lineSpacingExtra="8sp"
         android:text="Datos: "
-
+        android:visibility="invisible"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="@android:color/holo_blue_dark"
@@ -54,32 +56,104 @@
         android:textStyle="bold"
         android:typeface="sans"
         app:fontFamily="sans-serif"
-        app:layout_constraintBottom_toTopOf="@+id/listView"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lay1"
-        app:layout_constraintVertical_chainStyle="spread_inside" />
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        android:gravity="center_horizontal" />
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="500dp"
+    android:layout_height="match_parent"
+    android:background="@drawable/black_shape_fondo_azul_cuadrado"
+    android:padding="10dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <TextView
+        android:id="@+id/tv_dip_emparejados"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Elixe conexión"
+        android:layout_marginLeft="20dp"
+        android:textSize="22dp"
+        android:textColor="@android:color/black"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+
+        android:background="@drawable/botones_paneles"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="REFRESCAR"
+        android:layout_marginBottom="10dp"
+        android:onClick="refrescar"
+        app:layout_constraintBottom_toTopOf="@+id/listView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/listView"
-        android:layout_width="0dp"
-        android:layout_height="308dp"
-        android:background="@android:color/holo_orange_light"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="10dp"
+
+
+        android:background="@drawable/black_shape_fondo_azuloscuro_cuadrado"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_dip_emparejados" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="500dp"
+    android:layout_height="match_parent"
+    android:background="@drawable/black_shape_fondo_azul_cuadrado"
+    android:padding="10dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+    <TextView
+        android:id="@+id/tv_buscar"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Ou busca para emprarellar"
+        android:layout_marginLeft="20dp"
+        android:textSize="22dp"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="100dp"
+android:layout_marginBottom="10dp"
+        android:onClick="buscar"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="BUSCAR"
+        android:background="@drawable/botones_paneles"
         app:layout_constraintBottom_toTopOf="@+id/listBusca"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv" />
-
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/listBusca"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@android:color/holo_blue_dark"
+
+        android:padding="10dp"
+        android:background="@drawable/black_shape_fondo_azuloscuro_cuadrado"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_buscar" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

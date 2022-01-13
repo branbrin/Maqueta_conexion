@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import static com.example.maqueta_conexion.MainActivity.mViewViewModel;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,38 +87,53 @@ public class TerminalesEditar extends Fragment {
         cabecero = view.findViewById(R.id.terminal_cabecero);
         ultimo = view.findViewById(R.id.terminal_final);
 
-        Botones caux = (Botones) mTermi.getTag();
-        Botones c=Fmando4.mViewViewModel.getBoton(caux.getId());
-        if (c!=null){
-            mensaje.setText("" + c.getMensaje());
-            cabecero.setText("" + c.getCabecero());
-            ultimo.setText("" + c.getUltimo());
+        switch (Mando4.numeroPanel){
+            case 0:
+                Panel0 termaux = (Panel0) mTermi.getTag();
+                Panel0 terminal=mViewViewModel.getViewByIDPanel0(termaux.getId());
+                if (terminal!=null){
+                    mensaje.setText("" + terminal.getMensaje());
+                    cabecero.setText("" + terminal.getCabecero());
+                    ultimo.setText("" + terminal.getUltimo());
+                }
+
+
+
+
+                boton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GeneralDialogFragment generalDialogFragment =
+                                GeneralDialogFragment.newInstance("CONFIGURAR BOTON", "message", terminal.getId(),R.layout.popup_botones);
+                        generalDialogFragment.show(getParentFragmentManager(), "dialog");
+                    }
+                });
+                break;
+            case 4:
+                Botones caux = (Botones) mTermi.getTag();
+                Botones c=mViewViewModel.getBoton(caux.getId());
+                if (c!=null){
+                    mensaje.setText("" + c.getMensaje());
+                    cabecero.setText("" + c.getCabecero());
+                    ultimo.setText("" + c.getUltimo());
+                }
+
+
+
+
+                boton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GeneralDialogFragment generalDialogFragment =
+                                GeneralDialogFragment.newInstance("CONFIGURAR BOTON", "message", c.getId(),R.layout.popup_botones);
+                        generalDialogFragment.show(getParentFragmentManager(), "dialog");
+                    }
+                });
+                break;
+
         }
 
-        /*String s = c.getMensaje();
-        if (s.length()>1){
-            String m = s.substring(0, s.length() - 2);
-            String u = s.substring(s.length() - 1);
-            mensaje.setText("Mensaje:  " + m);
-            cabecero.setText("Cabecero:  " + c.getCabecero());
-            ultimo.setText("Final: " + u);
-        }else {
-            mensaje.setText("Mensaje: sin datos" );
-            cabecero.setText("Cabecero:  " + c.getCabecero());
-            ultimo.setText("Final: sin datos" );
-        }
 
-*/
-
-
-        boton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GeneralDialogFragment generalDialogFragment =
-                        GeneralDialogFragment.newInstance("CONFIGURAR BOTON", "message", c.getId(),R.layout.popup_botones);
-                generalDialogFragment.show(getParentFragmentManager(), "dialog");
-            }
-        });
     }
     static public void actualizarTermi(String cabecer,String mensaj, String ultim){
         mensaje.setText(""+mensaj);

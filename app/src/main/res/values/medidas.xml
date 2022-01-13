@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="botonEditarPanelesAncho">100dp</dimen>
+    <dimen name="botonEditarPanelesAlto">40dp</dimen>
+    <dimen name="botonEditarPanelesdist">20dp</dimen>
+
+</resources>

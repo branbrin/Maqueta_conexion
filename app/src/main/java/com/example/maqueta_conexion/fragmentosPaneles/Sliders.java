@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.maqueta_conexion.MyTouchListener;
 import com.example.maqueta_conexion.R;
 
 /**
@@ -61,5 +63,15 @@ public class Sliders extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_sliders, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        SeekBar slider = view.findViewById(R.id.slider);
+        slider.setOnTouchListener(new MyTouchListener());
+        slider.setClickable(false);
+
+
     }
 }

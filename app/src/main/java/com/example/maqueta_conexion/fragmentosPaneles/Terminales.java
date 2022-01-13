@@ -72,7 +72,7 @@ public class Terminales extends Fragment {
 
         // view.findViewById(R.id.button).setOnClickListener(new botonClick());
         view.findViewById(R.id.terminal).setOnTouchListener(new MyTouchListener());
-        view.findViewById(R.id.msg).setVisibility(View.INVISIBLE);
+        view.findViewById(R.id.msg).setClickable(false);
         view.findViewById(R.id.pantalla).setOnTouchListener(new MyTouchListener());
         view.findViewById(R.id.terminalBT).setOnTouchListener(new MyTouchListener());
 

@@ -3,131 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/cardview_dark_background"
-    android:padding="20dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@color/cardview_dark_background"
+    >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/a"
-        android:layout_width="310dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="14dp"
-        android:background="@color/cardview_shadow_start_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout19">
-
-
-        <TextView
-            android:id="@+id/tbdesactivado"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_margin="8dp"
-            android:layout_marginTop="4dp"
-            android:padding="4dp"
-            android:text="Mensaxe enviada o desactivar"
-            android:textColor="#C3BEBE"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/et_desactivado"
-            android:layout_width="55dp"
-            android:layout_height="31dp"
-            android:layout_margin="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="28dp"
-            android:layout_marginRight="28dp"
-            android:background="@drawable/red_shape_fondo_blanco"
-            android:gravity="center"
-            android:text=""
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout20"
-        android:layout_width="310dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="14dp"
-        android:background="@color/cardview_shadow_start_color"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/a">
-
-        <TextView
-            android:id="@+id/tb_inicio_int"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_margin="8dp"
-            android:layout_marginTop="4dp"
-            android:padding="4dp"
-            android:text="Inicio da trama"
-            android:textColor="#C3BEBE"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/et_inicio_int"
-            android:layout_width="55dp"
-            android:layout_height="31dp"
-            android:layout_margin="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="28dp"
-            android:layout_marginRight="28dp"
-            android:background="@drawable/red_shape_fondo_blanco"
-            android:gravity="center"
-            android:text=""
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/b"
-        android:layout_width="310dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="14dp"
-        android:background="@color/cardview_shadow_start_color"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout20">
-
-        <TextView
-            android:id="@+id/tb_fin_int"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_margin="8dp"
-            android:layout_marginTop="4dp"
-            android:padding="4dp"
-            android:text="Fin da trama"
-            android:textColor="#C3BEBE"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/et_fin_int"
-            android:layout_width="55dp"
-            android:layout_height="31dp"
-            android:layout_margin="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="28dp"
-            android:layout_marginRight="28dp"
-            android:background="@drawable/red_shape_fondo_blanco"
-            android:gravity="center"
-            android:text=""
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/aceptar_interruptor"
+        android:id="@+id/aceptar_slider"
         android:layout_width="251dp"
 
         android:layout_height="50dp"
@@ -135,58 +19,62 @@
         android:text="Aceptar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/b" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout18" />
 
     <RadioGroup
-        android:id="@+id/radiogroup2"
+        android:id="@+id/radiogroupslider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:background="@color/cardview_shadow_start_color"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
+
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout17">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="Estado actual do Interruptor:   "
+            android:text="Elexir cando enviar:"
             android:textColor="#C3BEBE"
 
             ></TextView>
 
         <RadioButton
-            android:id="@+id/radioOn"
-            android:layout_width="80dp"
+            android:id="@+id/radiosoltar"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_margin="8dp"
-            android:background="@drawable/green_shape_fondo_blanco"
-            android:text="On" />
+            android:background="@drawable/red_shape_fondo_blanco"
+            android:paddingRight="8dp"
+            android:text="O soltar" />
 
         <RadioButton
-            android:id="@+id/radioOff"
-            android:layout_width="80dp"
+            android:id="@+id/radiocambio"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_margin="8dp"
-
             android:background="@drawable/red_shape_fondo_blanco"
-            android:text="Off" />
+            android:paddingRight="8dp"
+            android:text="O cambiar" />
 
 
     </RadioGroup>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout19"
+        android:id="@+id/constraintLayout9"
         android:layout_width="310dp"
         android:layout_height="46dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="14dp"
 
         android:background="@color/cardview_shadow_start_color"
         app:layout_constraintEnd_toEndOf="parent"
+
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radiogroup2">
+        app:layout_constraintTop_toBottomOf="@+id/radiogroupslider">
 
         <TextView
             android:id="@+id/tbactivado"
@@ -195,25 +83,144 @@
             android:layout_margin="8dp"
             android:layout_marginTop="4dp"
             android:padding="4dp"
-            android:text="Mensaxe enviada o activar"
+            android:text="Primeiro caracter enviado"
             android:textColor="#C3BEBE"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/et_activado"
+            android:id="@+id/et_sldr_primer"
             android:layout_width="55dp"
             android:layout_height="31dp"
             android:layout_margin="8dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="28dp"
             android:layout_marginRight="28dp"
-            android:background="@drawable/red_shape_fondo_blanco"
+            android:background="@drawable/green_shape_fondo_blanco"
             android:gravity="center"
             android:text=""
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout10"
+        android:layout_width="310dp"
+        android:layout_height="46dp"
+
+        android:layout_marginTop="14dp"
+        android:background="@color/cardview_shadow_start_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
+
+        <TextView
+            android:id="@+id/tbmsg123"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_margin="8dp"
+            android:layout_marginTop="4dp"
+            android:padding="4dp"
+            android:text="Cabeceiro"
+            android:textColor="#C3BEBE"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/et_sldr_cabecero"
+            android:layout_width="55dp"
+            android:layout_height="31dp"
+            android:layout_margin="8dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="28dp"
+            android:layout_marginRight="28dp"
+            android:background="@drawable/green_shape_fondo_blanco"
+            android:gravity="center"
+            android:text=""
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout18"
+        android:layout_width="310dp"
+
+        android:layout_height="46dp"
+        android:layout_marginTop="14dp"
+        android:background="@color/cardview_shadow_start_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout10">
+
+        <TextView
+            android:id="@+id/tbfinañg123"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_margin="8dp"
+            android:layout_marginTop="4dp"
+            android:padding="4dp"
+            android:text="Último caracter enviado"
+            android:textColor="#C3BEBE"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/et_sldr_final"
+            android:layout_width="55dp"
+            android:layout_height="31dp"
+            android:layout_margin="8dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="28dp"
+            android:layout_marginRight="28dp"
+            android:background="@drawable/green_shape_fondo_blanco"
+            android:gravity="center"
+            android:text=""
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout17"
+        android:layout_width="310dp"
+
+        android:layout_height="46dp"
+        android:layout_marginTop="14dp"
+        android:background="@color/cardview_shadow_start_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/rango"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_margin="8dp"
+            android:layout_marginTop="4dp"
+            android:padding="4dp"
+            android:text="Fixar rango máximo"
+            android:textColor="#C3BEBE"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/et_rango"
+            android:layout_width="55dp"
+            android:layout_height="31dp"
+            android:layout_margin="8dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="28dp"
+            android:layout_marginRight="28dp"
+            android:background="@drawable/green_shape_fondo_blanco"
+            android:gravity="center"
+            android:text=""
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ import com.example.maqueta_conexion.fragmentosPaneles.Mandos;
 import com.example.maqueta_conexion.fragmentosPaneles.Sliders;
 import com.example.maqueta_conexion.fragmentosPaneles.Terminales;
 import com.example.maqueta_conexion.fragmentosPaneles.Texto;
+import com.jjoe64.graphview.GraphView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -58,7 +60,9 @@ import java.util.UUID;
 
 import static com.example.maqueta_conexion.BluetoothMainActivity.*;
 import static com.example.maqueta_conexion.Fmando4.botones;
-import static com.example.maqueta_conexion.Fmando4.mViewViewModel;
+import static com.example.maqueta_conexion.Fmando4.panel0;
+import static com.example.maqueta_conexion.MainActivity.mViewViewModel;
+
 
 public class Mando4 extends AppCompatActivity {
 
@@ -67,13 +71,16 @@ public class Mando4 extends AppCompatActivity {
     static public ArrayList<TextView> pantallas_actuales;
     static public ArrayList<ConstraintLayout> terminalesBT_actuales;
     static public ArrayList<Switch> interruptores_actuales;
+    static public ArrayList<SeekBar> sliders_actuales;
+    static public ArrayList<ConstraintLayout> graficas_actuales;
 
-
+    static public int numeroPanel;
     public static int conectar_mando=-1;
     FragmentManager fragmentManager = getSupportFragmentManager();
     public static boolean attachMando4=true;
     public static TextView pruebas;
     public static AlertDialog dialog;
+
     TextView panelTexto;
     TextView panelBotones;
     TextView panelInterruptores;
@@ -97,7 +104,12 @@ public class Mando4 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mando4);
         Intent intent=getIntent();
+        numeroPanel= intent.getIntExtra("numeroPanel",-1);
+        boolean activar = intent.getBooleanExtra("ejecutar",false);
+
+
         pruebas=findViewById(R.id.TVpruebas);
+        pruebas.setText(""+numeroPanel);
         panelTexto= findViewById(R.id.panelTexto);
         panelBotones=findViewById(R.id.textView3);
         panelInterruptores=findViewById(R.id.textView4);
@@ -141,9 +153,21 @@ public class Mando4 extends AppCompatActivity {
        // constraintLayout.setOnDragListener(new MyDragListener());
        //   View cosa = new View(this);
 
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.constraintLayout4, new Fmando4(),"fmando4" );
+
+
+        fragmentTransaction.add(R.id.constraintLayout4, new Fmando4(numeroPanel),"fmando4" );
         fragmentTransaction.commit();
+        FragmentTransaction fragmentTransaction2 = fragmentManager.beginTransaction();
+        if (activar){
+            findViewById(R.id.constraintLayout4).setVisibility(View.INVISIBLE);
+            findViewById(R.id.paneles).setVisibility(View.INVISIBLE);
+            findViewById(R.id.layouteditar).setVisibility(View.INVISIBLE);
+            fragmentTransaction2.replace(R.id.constraint4, new Fmando4Activado(),"Fmando4");
+            fragmentTransaction2.commit();
+        }
+
 
 
 
@@ -212,68 +236,159 @@ public class Mando4 extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         //Se pulsó boton del menu "Habilitar bluetooth"
         if (id == R.id.activar_mando){
+            findViewById(R.id.constraintLayout4).setVisibility(View.INVISIBLE);
+            findViewById(R.id.paneles).setVisibility(View.INVISIBLE);
+            findViewById(R.id.layouteditar).setVisibility(View.INVISIBLE);
             fragmentTransaction.replace(R.id.constraint4, fmando4Activado,"Fmando4");
             fragmentTransaction.commit();
             pruebas.setText("Holi!");
-            for (int i = 0; i < botones.size(); i++) {
-                com.example.maqueta_conexion.Botones actualizador = botones.get(i);
-                switch (actualizador.mBoton) {
-                    case "boton":
-                        for (int j = 0; j < botones_actuales.size(); j++) {
-                            com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) botones_actuales.get(j).getTag();
-                            if (auxiliar.getId() == actualizador.getId()) {
-                                actualizador.setX(botones_actuales.get(j).getX());
-                                actualizador.setY(botones_actuales.get(j).getY());
-                                mViewViewModel.añadeBoton(actualizador);
-                            }
-                        }
-                        break;
-                    case "terminal":
-                        for (int j = 0; j < terminales_actuales.size(); j++) {
-                            com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) terminales_actuales.get(j).getTag();
-                            if (auxiliar.getId() == actualizador.getId()) {
-                                actualizador.setX(terminales_actuales.get(j).getX());
-                                actualizador.setY(terminales_actuales.get(j).getY());
-                                mViewViewModel.añadeBoton(actualizador);
-                            }
-                        }
-                        break;
+            switch (numeroPanel){
+                case 0:
+                    for (int i = 0; i < panel0.size(); i++) {
+                        Panel0 actualizador = panel0.get(i);
+                        switch (actualizador.mBoton) {
+                            case "boton":
+                                for (int j = 0; j < botones_actuales.size(); j++) {
+                                    Panel0 auxiliar = (Panel0) botones_actuales.get(j).getTag();
+                                    if (auxiliar.getId() == actualizador.getId()) {
+                                        actualizador.setX(botones_actuales.get(j).getX());
+                                        actualizador.setY(botones_actuales.get(j).getY());
+                                        mViewViewModel.añadeElementoPanel0(actualizador);
+                                    }
+                                }
+                                break;
+                            case "terminal":
+                                for (int j = 0; j < terminales_actuales.size(); j++) {
+                                    Panel0 auxiliar = (Panel0) terminales_actuales.get(j).getTag();
+                                    if (auxiliar.getId() == actualizador.getId()) {
+                                        actualizador.setX(terminales_actuales.get(j).getX());
+                                        actualizador.setY(terminales_actuales.get(j).getY());
+                                        mViewViewModel.añadeElementoPanel0(actualizador);
+                                    }
+                                }
+                                break;
 
-                    case "pantalla":
-                        for (int j = 0; j < pantallas_actuales.size(); j++) {
-                            com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) pantallas_actuales.get(j).getTag();
-                            if (auxiliar.getId() == actualizador.getId()) {
-                                actualizador.setX(pantallas_actuales.get(j).getX());
-                                actualizador.setY(pantallas_actuales.get(j).getY());
-                                mViewViewModel.añadeBoton(actualizador);
-                            }
-                        }
-                        break;
+                            case "pantalla":
+                                for (int j = 0; j < pantallas_actuales.size(); j++) {
+                                    Panel0 auxiliar = (com.example.maqueta_conexion.Panel0) pantallas_actuales.get(j).getTag();
+                                    if (auxiliar.getId() == actualizador.getId()) {
+                                        actualizador.setX(pantallas_actuales.get(j).getX());
+                                        actualizador.setY(pantallas_actuales.get(j).getY());
+                                        mViewViewModel.añadeElementoPanel0(actualizador);
+                                    }
+                                }
+                                break;
 
-                    case "terminalBT":
-                        for (int j = 0; j < terminalesBT_actuales.size(); j++) {
-                            com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) terminalesBT_actuales.get(j).getTag();
-                            if (auxiliar.getId() == actualizador.getId()) {
-                                actualizador.setX(terminalesBT_actuales.get(j).getX());
-                                actualizador.setY(terminalesBT_actuales.get(j).getY());
-                                mViewViewModel.añadeBoton(actualizador);
-                            }
-                        }
-                        break;
+                            case "terminalBT":
+                                for (int j = 0; j < terminalesBT_actuales.size(); j++) {
+                                    com.example.maqueta_conexion.Panel0 auxiliar = (com.example.maqueta_conexion.Panel0) terminalesBT_actuales.get(j).getTag();
+                                    if (auxiliar.getId() == actualizador.getId()) {
+                                        actualizador.setX(terminalesBT_actuales.get(j).getX());
+                                        actualizador.setY(terminalesBT_actuales.get(j).getY());
+                                        mViewViewModel.añadeElementoPanel0(actualizador);
+                                    }
+                                }
+                                break;
 
-                    case "interruptor":
-                        for (int j = 0; j < interruptores_actuales.size(); j++) {
-                            com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) interruptores_actuales.get(j).getTag();
-                            if (auxiliar.getId() == actualizador.getId()) {
-                                actualizador.setX(interruptores_actuales.get(j).getX());
-                                actualizador.setY(interruptores_actuales.get(j).getY());
-                                mViewViewModel.añadeBoton(actualizador);
-                            }
-                        }
-                        break;
-                }
+                            case "interruptor":
+                                for (int j = 0; j < interruptores_actuales.size(); j++) {
+                                    com.example.maqueta_conexion.Panel0 auxiliar = (com.example.maqueta_conexion.Panel0) interruptores_actuales.get(j).getTag();
+                                    if (auxiliar.getId() == actualizador.getId()) {
+                                        actualizador.setX(interruptores_actuales.get(j).getX());
+                                        actualizador.setY(interruptores_actuales.get(j).getY());
+                                        mViewViewModel.añadeElementoPanel0(actualizador);
+                                    }
+                                }
+                                break;
 
+                            case "grafica":
+                                for (int j = 0; j < graficas_actuales.size(); j++) {
+                                    com.example.maqueta_conexion.Panel0 auxiliar = (com.example.maqueta_conexion.Panel0) graficas_actuales.get(j).getTag();
+                                    if (auxiliar.getId() == actualizador.getId()) {
+                                        actualizador.setX(graficas_actuales.get(j).getX());
+                                        actualizador.setY(graficas_actuales.get(j).getY());
+                                        mViewViewModel.añadeElementoPanel0(actualizador);
+                                    }
+                                }
+                                break;
+                        }
+
+                    }
+                    break;
+                case 4:
+                    for (int i = 0; i < botones.size(); i++) {
+                        com.example.maqueta_conexion.Botones actualizador = botones.get(i);
+                        switch (actualizador.mBoton) {
+                            case "boton":
+                                for (int j = 0; j < botones_actuales.size(); j++) {
+                                    com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) botones_actuales.get(j).getTag();
+                                    if (auxiliar.getId() == actualizador.getId()) {
+                                        actualizador.setX(botones_actuales.get(j).getX());
+                                        actualizador.setY(botones_actuales.get(j).getY());
+                                        mViewViewModel.añadeBoton(actualizador);
+                                    }
+                                }
+                                break;
+                            case "terminal":
+                                for (int j = 0; j < terminales_actuales.size(); j++) {
+                                    com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) terminales_actuales.get(j).getTag();
+                                    if (auxiliar.getId() == actualizador.getId()) {
+                                        actualizador.setX(terminales_actuales.get(j).getX());
+                                        actualizador.setY(terminales_actuales.get(j).getY());
+                                        mViewViewModel.añadeBoton(actualizador);
+                                    }
+                                }
+                                break;
+
+                            case "pantalla":
+                                for (int j = 0; j < pantallas_actuales.size(); j++) {
+                                    com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) pantallas_actuales.get(j).getTag();
+                                    if (auxiliar.getId() == actualizador.getId()) {
+                                        actualizador.setX(pantallas_actuales.get(j).getX());
+                                        actualizador.setY(pantallas_actuales.get(j).getY());
+                                        mViewViewModel.añadeBoton(actualizador);
+                                    }
+                                }
+                                break;
+
+                            case "terminalBT":
+                                for (int j = 0; j < terminalesBT_actuales.size(); j++) {
+                                    com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) terminalesBT_actuales.get(j).getTag();
+                                    if (auxiliar.getId() == actualizador.getId()) {
+                                        actualizador.setX(terminalesBT_actuales.get(j).getX());
+                                        actualizador.setY(terminalesBT_actuales.get(j).getY());
+                                        mViewViewModel.añadeBoton(actualizador);
+                                    }
+                                }
+                                break;
+
+                            case "interruptor":
+                                for (int j = 0; j < interruptores_actuales.size(); j++) {
+                                    com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) interruptores_actuales.get(j).getTag();
+                                    if (auxiliar.getId() == actualizador.getId()) {
+                                        actualizador.setX(interruptores_actuales.get(j).getX());
+                                        actualizador.setY(interruptores_actuales.get(j).getY());
+                                        mViewViewModel.añadeBoton(actualizador);
+                                    }
+                                }
+                                break;
+
+                            case "grafica":
+                                for (int j = 0; j < graficas_actuales.size(); j++) {
+                                    com.example.maqueta_conexion.Botones auxiliar = (com.example.maqueta_conexion.Botones) graficas_actuales.get(j).getTag();
+                                    if (auxiliar.getId() == actualizador.getId()) {
+                                        actualizador.setX(graficas_actuales.get(j).getX());
+                                        actualizador.setY(graficas_actuales.get(j).getY());
+                                        mViewViewModel.añadeBoton(actualizador);
+                                    }
+                                }
+                                break;
+                        }
+
+                    }
+                    break;
             }
+
           /*  if (botones_actuales.size()>0){
                     for(int i=0;i<botones_actuales.size();i++){
                     com.example.maqueta_conexion.Botones actualizador=Fmando4.botones.get(i);
@@ -284,14 +399,26 @@ public class Mando4 extends AppCompatActivity {
             }*/
         }
         if (id == R.id.modo_editar){
+            findViewById(R.id.constraintLayout4).setVisibility(View.VISIBLE);
+            findViewById(R.id.paneles).setVisibility(View.VISIBLE);
+            findViewById(R.id.layouteditar).setVisibility(View.VISIBLE);
             Fragment fragment = getSupportFragmentManager().findFragmentByTag("Fmando4");
             if(fragment != null) {
                 getSupportFragmentManager().beginTransaction().remove(fragment).commit();
             }
         }
         if (id==R.id.conectar){
+
+              /*  primerInicio=false;
+                Intent intentreset = getIntent();
+                finish();
+
+                startActivity(intentreset);
+*/
+
+
             conectar_mando=4;
-            Intent intentBluetoothActivity =new Intent(this, BluetoothMainActivity.class);
+           Intent intentBluetoothActivity =new Intent(this, BluetoothMainActivity.class);
             startActivity(intentBluetoothActivity);
         }
         return super.onOptionsItemSelected(item);
@@ -308,6 +435,20 @@ public class Mando4 extends AppCompatActivity {
         fragmentTransaction.add(R.id.constraintLayout4, new Fmando4(),"Fmando4" );
         fragmentTransaction.commit();
     }
+
+   /* public void onStart(){
+        super.onStart();
+        if (primerInicio){
+            primerInicio=false;
+            Intent intentreset = getIntent();
+            finish();
+
+
+            startActivity(intentreset);
+
+           // resetFmando4();
+        }
+    }*/
     /*
     class MyDragListener implements View.OnDragListener {
 
@@ -382,7 +523,15 @@ public class Mando4 extends AppCompatActivity {
         //obtener bitmap
         ConstraintLayout layout= findViewById(R.id.constraintLayout4);
         Bitmap bmp = screenShot(layout);
-        MainActivity.imageView4.setImageBitmap(bmp);
+        switch (numeroPanel){
+            case  0:
+                MainActivity.imageView0.setImageBitmap(bmp);
+                break;
+            case 4:
+                MainActivity.imageView4.setImageBitmap(bmp);
+                break;
+        }
+
         //convertir bitmap a Byte[]
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -390,7 +539,7 @@ public class Mando4 extends AppCompatActivity {
 
         //guardar en almacenamiento interno
         try {
-            FileOutputStream outputStream = getApplicationContext().openFileOutput("imagen"+MainActivity.maquetaID+".png", Context.MODE_PRIVATE);
+            FileOutputStream outputStream = getApplicationContext().openFileOutput("imagen"+numeroPanel+".png", Context.MODE_PRIVATE);
             outputStream.write(byteArray);
             outputStream.close();
         } catch (FileNotFoundException e) {
@@ -409,10 +558,14 @@ public class Mando4 extends AppCompatActivity {
         view.draw(canvas);
         return bitmap;
     }
+
     public void mostrar_botones(View view){
         Botones botones = new Botones();
         TextView textView=(TextView)view;
         selector(textView,botones);
+
+
+
     }
   /*  protected void onResume(){
         super.onResume();
@@ -488,6 +641,8 @@ public class Mando4 extends AppCompatActivity {
         selector(textView,cosas);
 
     }
+
+
 
     public  void selector (TextView textView, Fragment fragment){
 

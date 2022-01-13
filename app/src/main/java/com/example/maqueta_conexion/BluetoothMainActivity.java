@@ -10,6 +10,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.database.CharArrayBuffer;
 import android.graphics.Color;
 import android.os.Build;
@@ -23,6 +24,7 @@ import android.os.Bundle;
 import android.service.autofill.CharSequenceTransformation;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,18 +32,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.maqueta_conexion.fragmentosMandos.Fmando4Activado;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,47 +59,52 @@ import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.example.maqueta_conexion.Fmando4.mViewViewModel;
+import static com.example.maqueta_conexion.MainActivity.estadoBT;
+import static com.example.maqueta_conexion.MainActivity.mViewViewModel;
+import static com.example.maqueta_conexion.fragmentosMandos.Fmando4Activado.serie0;
 
 
 public class BluetoothMainActivity extends AppCompatActivity {
     //CONSTANTES
-
-
-
     //DECLARACIÓN DE VARIABLES
     public static BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     public static Boolean BT_conectado;
     public static String BT_id;
     static ListView listViewEmparejados;
-    static ListView listViewBuscados;
     static ListaPulsable listaPulsable;
+    static ListView listViewBuscados;
     static ListaBuscarDispositivos listaBuscarDispositivos;
     static MenuItem item_hab;
     static MenuItem item_serv;
+    public static ConnectThread connectThread;
     static ConnectedThread connectedThread;
     static Handler bluetoothHandler;
     static Handler estadoHandler;
     static Handler pantallaHandler;
     static TextView datos;
     static TextView estado;
-    public static ConnectThread connectThread;
+
     static AcceptThread acceptThread;
     boolean espera_consigna=false;
     boolean recibir=false;
+    boolean datosGrafica=false;
+    boolean coma;
+    int tiempo;
     String consigna="";
     static byte[] recibido;
+    String xy;
+
     ArrayList trama = new ArrayList<Character>();
     FragmentManager fragmentManager= this.getSupportFragmentManager();
+    char caracterAnterior;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         //INICIALIZACIONES
         //-->Intetaccion con usuario
         listaPulsable = new ListaPulsable(this,0);
@@ -102,20 +117,35 @@ public class BluetoothMainActivity extends AppCompatActivity {
         datos= findViewById(R.id.tv);
         datos.setMovementMethod(new ScrollingMovementMethod());
         BT_conectado=false;
-
-
+        tiempo=0;
+        xy="";
+        coma=false;
         //-->Utilidades
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothDevice.ACTION_UUID);
         filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-        registerReceiver(receiver, filter); // Don't forget to unregister during onDestroy
+        registerReceiver(receiver, filter);
+        // Don't forget to unregister during onDestroy
         Intent intent = getIntent();
         bluetoothHandler= new BluetoothHandler();
         estadoHandler= new Handler();
         pantallaHandler=new Handler();
         actualizaestado.run();
+        listaPulsable.clear();
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+
+        // If there are paired devices
+        if (pairedDevices.size() > 0) {
+            // Loop through paired devices
+            for (BluetoothDevice device : pairedDevices) {
+                Emparejados newUser=new Emparejados(device.getName(),device.getAddress(),false);
+                // Add the name and address to an array adapter to show in a ListView
+
+                listaPulsable.add(newUser);
+            }
+        }
     }
 
 
@@ -228,13 +258,6 @@ public class BluetoothMainActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
     //--------------------------BROADCASTRECEIVER------------------------------------------------
 
     BroadcastReceiver receiver = new BroadcastReceiver(){
@@ -282,10 +305,12 @@ public class BluetoothMainActivity extends AppCompatActivity {
             if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
             //Device is now connected
                 BT_conectado=true;
+                estadoBT.setText("CONECTADO");
             }
             if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
             //Device has disconnected
                 BT_conectado=false;
+                estadoBT.setText("DESCONECTADO");
             }
         }
     };
@@ -294,17 +319,18 @@ public class BluetoothMainActivity extends AppCompatActivity {
     //-----------------ON ACTIVITY RESULT------------------------------------------------------------
     //Método que es llamado cuando se usa StartActivityForResult. Contiene el resultado de alguna
     //interaccion con el usuario
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Se cambiara el nombre del boton del menu Habilitar/Deshabilitar, según lo que pulse
         //el usuario (permitir o denegar)
-        if (requestCode==Constantes.REQUEST_ENABLE_BT){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constantes.REQUEST_ENABLE_BT) {
             //REQUEST_ENABLE-BT: codigo que identifica de que acción se trata
             //RESULT_OK: el usuario permitió la habilitación del bluetooth
             //RESULT_CANCELED: el usuario denegó la habilitación del bluetooth
-            if (resultCode==RESULT_OK){
+            if (resultCode == RESULT_OK) {
                 item_hab.setTitle("Deshabilitar Bluetooth");
             }
-            if (resultCode==RESULT_CANCELED){
+            if (resultCode == RESULT_CANCELED) {
                 item_hab.setTitle("Habilitar Bluetooth");
             }
 
@@ -320,12 +346,18 @@ public class BluetoothMainActivity extends AppCompatActivity {
                 if (connectThread != null){
                     if (connectThread.mmSocket.isConnected()){
                         estado.setText("CONECTADO CLIENTE");
+                        //estadoBT.setText("CONECTADO");
+                        estadoBT.setTag(R.color.negro);
+                        MainActivity.botonConectar.setText("DESCONECTAR");
                         if (MotorActivity.estado!=null){
                             MotorActivity.estado.setText("CONECTADO CLIENTE");
                         }
 
                     }else{
                         estado.setText("DESCONECTADO CLIENTE");
+                      // estadoBT.setText("DESCONECTADO");
+                        estadoBT.setTag(R.color.botonDesactivado);
+                        MainActivity.botonConectar.setText("CONECTAR");
                         if (MotorActivity.estado!=null){
                             MotorActivity.estado.setText("DESCONECTADO CLIENTE");
                         }
@@ -403,7 +435,10 @@ public class BluetoothMainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.INVISIBLE);
             }
             //cambio el color de cada fila gradualmente
-            convertView.setBackgroundColor(position*Color.YELLOW*10);
+
+            convertView.setBackgroundColor((position+1)*(Color.YELLOW)*20);
+
+
 
             //método para hacer pulsable cada fila del array adapter
             //si se pulsa se inicia la conexion con el dispositivo correspondiente
@@ -420,10 +455,11 @@ public class BluetoothMainActivity extends AppCompatActivity {
                     }
                     connectThread = new ConnectThread(device);
                     connectThread.start();
+                    BT_id=user.id;
                     if (Mando4.conectar_mando==4) {
                         Intent intentMando4 = new Intent(BluetoothMainActivity.this, Mando4.class);
                         Mando4.conectar_mando = -1;
-                        BT_id=user.id;
+
                         startActivity(intentMando4);
                   /*  }else if(Mando4.conectar_mando==11){
                         Intent intentMando4 =new Intent(BluetoothMainActivity.this, Fmando4Activado.class);
@@ -434,19 +470,37 @@ public class BluetoothMainActivity extends AppCompatActivity {
 */
                     }
                     else {
-                        Intent intentMotor =new Intent(BluetoothMainActivity.this, MotorActivity.class);
+                        Intent intentMotor =new Intent(BluetoothMainActivity.this, MainActivity.class);
                         intentMotor.putExtra("bluto",user.id);
                         startActivity(intentMotor);
                     }
-
-
-
                 }
             });
-
             return convertView;
         }
     }
+    public void refrescar(View view){
+        listaPulsable.clear();  //borrar o que había na lista
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        // Enchemos a lista pairredDevices cos dispositivos sincronizados
+        // E recorremos esa lista para encher a nosa lista cos datos obtidos
+        if (pairedDevices.size() > 0) {
+
+            for (BluetoothDevice device : pairedDevices) {
+             Emparejados dispositivo=new Emparejados(device.getName(),device.getAddress(),false);
+             //Engadimos a información a nosa lista
+             listaPulsable.add(dispositivo);
+            }
+        }
+    }
+
+    public void buscar(View view){
+        mBluetoothAdapter.enable();
+        listaBuscarDispositivos.clear();
+        //Inicio da búsqueda de dispositivos
+        mBluetoothAdapter.startDiscovery();
+    }
+
     public  class Emparejados {
         //Esta clase define los elementos del listView que mostrará los dispositivos emparejados
         //Las vistas tienen 2 TextViews y una loadingBar
@@ -456,7 +510,6 @@ public class BluetoothMainActivity extends AppCompatActivity {
         public String nombre;
         public String id;
         public boolean progresBar;
-
         //Constructor:
         public Emparejados(String nombre, String id,boolean estado) {
             this.nombre = nombre;
@@ -492,7 +545,7 @@ public class BluetoothMainActivity extends AppCompatActivity {
             tvId.setText(user.id);
 
             //llamo a un metodo para cambiar el color de cada vista de forma aleatoria
-            convertView.setBackgroundColor(position*Color.green(3)*10);
+            convertView.setBackgroundColor((position+1)*(Color.YELLOW)*20);
 
             //método para hacer pulsable cada fila del array adapter
             //Si se pulsa se intenta sincronizar con ese dispositivo
@@ -572,16 +625,15 @@ public class BluetoothMainActivity extends AppCompatActivity {
             }
         }
     }
+
     public static class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
-
         public ConnectedThread(BluetoothSocket socket) {
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
-
             // Get the input and output streams, using temp objects because
             // member streams are final
             try {
@@ -596,24 +648,17 @@ public class BluetoothMainActivity extends AppCompatActivity {
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         public void run() {
-            byte[] buffer = new byte[512];  // buffer store for the stream
-            int bytes; // bytes returned from read()
-
+           // byte[] buffer = new byte[512];  // buffer store for the stream
+            // int bytes; // bytes returned from read()
             // Keep listening to the InputStream until an exception occurs
             while (true) {
                 try {
                     // Read from the InputStream
-
-                   // bytes = mmInStream.read(buffer);
+                    // bytes = mmInStream.read(buffer);
                     int data=mmInStream.read();
                     //recibido=buffer;
-
-
-
                     // Send the obtained bytes to the UI activity
                     bluetoothHandler.obtainMessage(Constantes.MESSAGE_READ, data, -1).sendToTarget();
-
-
                 } catch (IOException e) {
                     break;
                 }
@@ -635,28 +680,20 @@ public class BluetoothMainActivity extends AppCompatActivity {
         }
     }
     public static class ConnectThread extends Thread {
-        //Parámetros: mmsocket y mmDevice son los que se usan realmete para la conexión
-        //mmIndex y mmUser solo son para activar/desactivar la progressBar del arraAdapter
+        // Parámetros: mmsocket y mmDevice son los que se usan realmete para la conexión
         public   BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
-
-        // private final int mmIndex;
-        //  private final MainActivity.User mmUser;
-        //Constructor de la clase: se crea el soket para la conexión, con la id
-        //del dispositivo y un UUID.
+        // Constructor de la clase: se crea el soket para la conexión, con la id
+        // del dispositivo y un UUID.
         public  ConnectThread(BluetoothDevice device) {
             BluetoothSocket tmp = null;
-            //UUID es un coódigo que identifica el dispositivo al que uno se quiere conectar
-            //Si no se conoce se puede obtener con el método de la clase BluetoothDevice
-            //fetchUuidsWithSdp()
+            // UUID es un coódigo que identifica el dispositivo al que uno se quiere conectar
+            // Si no se conoce se puede obtener con el método de la clase BluetoothDevice
+            // fetchUuidsWithSdp()
             String uuidString ="00001101-0000-1000-8000-00805f9b34fb";
             UUID uuid = UUID.fromString(uuidString);
-
-            //Asigno a los argumentos a los parámetros
+            // Asigno a los argumentos a los parámetros
             mmDevice = device;
-            //  mmIndex= index;
-            //   mmUser= user;
-
             //Intento crear un socket, que se usará para conectar
             try{
                 tmp = mmDevice.createRfcommSocketToServiceRecord(uuid);
@@ -665,28 +702,22 @@ public class BluetoothMainActivity extends AppCompatActivity {
             }
             mmSocket = tmp;
         }
-        //Método heredado de la clase Thread. Se inicia cuando se llama al metodo .Start
-        //cuando se pulsa en alguna de las filas del ArrrayAdapter
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         public void run(){
             //por si acaso hay activa una busqueda de dispositivos, se para, ya que tanto
             //conectarse como buscar son procesos que consumen muchos recursos
             mBluetoothAdapter.cancelDiscovery();
-
-
             final String Sdev=mmDevice.toString();
             //intento conexión
             try{
                 mmSocket.connect();
                 //método para interactuar con el hilo principal
                 //actualizo datos de la lista de dispositivos
-
                 //Si no se da conectado, intento desconectar y actualizo lista de dispositivos
             }catch  (IOException connectException){
                 try {
                     mmSocket.close();
-                 //   datos.setText("--FalloCliente--");
-
+                    //datos.setText("--FalloCliente--");
                     //cargo en el log la excepción si no se dio desconectado
                 }catch (IOException closeException){
                     Log.e("movidas","Could not close the client socket", closeException);
@@ -694,28 +725,18 @@ public class BluetoothMainActivity extends AppCompatActivity {
                 return;
             }
             if (mmSocket.isConnected()){
-               // datos.setText("--ConectadoCliente--");
                 connectedThread=new ConnectedThread(mmSocket);
                 connectedThread.start();
             }
-
-            //manageMyConnectedSocket(mmSocket);
         }
-
-
         //método que cancela la conexión creada por este hilo
         public void cancel(){
             //intento desconectar
             try {
                 mmSocket.close();
-                //método que interactua con el hilo principal
-
-
-                // si no se conecta lo cargo en el log
             }catch (IOException e){
-                Log.e("movidas", "Could not close the client socket", e);
+                Log.e("issue", "Could not close the client socket", e);
             }
-
         }
     }
 
@@ -730,40 +751,166 @@ public class BluetoothMainActivity extends AppCompatActivity {
                char msg=(char)mensaje.arg1;
                 if (Fmando4Activado.pantallasActivas!=null){
                     for (int i =0; i<Fmando4Activado.pantallasActivas.size();i++) {
-                        Botones pAux =(Botones) Fmando4Activado.pantallasActivas.get(i).getTag();
-                        Botones p=Fmando4.mViewViewModel.getBoton(pAux.getId());
-                        if (p.getIDaux()==R.id.radioRecibido || p.getIDaux() ==R.id.radioAmbos){
-                            if (p.getMensaje().equals("SINCARACTER")){
-                                Fmando4Activado.pantallasActivas.get(i).setText(Fmando4Activado.pantallasActivas.get(i).getText()+String.valueOf(msg));
-                            }else {
-                                if (recibir){
-                                    if (p.getMensaje().equals(String.valueOf(msg))){
-                                        recibir=false;
-                                        mViewViewModel.añadeBoton(p);
-                                        Fmando4Activado.pantallasActivas.get(i).setText(Fmando4Activado.pantallasActivas.get(i).getText()+"\n");
-
-                                    }else{
-                                        Fmando4Activado.pantallasActivas.get(i).setText(Fmando4Activado.pantallasActivas.get(i).getText()+String.valueOf(msg));
+                        TextView pantalla = Fmando4Activado.pantallasActivas.get(i);
+                        switch (Mando4.numeroPanel){
+                            case 0:
+                                Panel0 pantaux =(Panel0) Fmando4Activado.pantallasActivas.get(i).getTag();
+                                Panel0 panta=mViewViewModel.getViewByIDPanel0(pantaux.getId());
+                                if (panta.getIDaux()==R.id.radioRecibido || panta.getIDaux() ==R.id.radioAmbos){
+                                    if (panta.getMensaje().equals("SINCARACTER")){
+                                        if (msg==1){
+                                            pantalla.setTextColor(Color.RED);
+                                            pantalla.append("\n"+"In:  ");
+                                            pantalla.setTextColor(Color.BLACK);
+                                        }
+                                        pantalla.append(String.valueOf(msg));
+                                    }else {
+                                        if (recibir){
+                                            if (panta.getMensaje().equals(String.valueOf(msg))){
+                                                recibir=false;
+                                                mViewViewModel.añadeElementoPanel0(panta);
+                                            }else{
+                                                pantalla.append(String.valueOf(msg));
+                                            }
+                                        }
+                                        else{
+                                            if (panta.getMensaje().equals(String.valueOf(msg))){
+                                                pantalla.setTextColor(Color.RED);
+                                                pantalla.append("\n"+"In:  ");
+                                                pantalla.setTextColor(Color.BLACK);
+                                                recibir=true;
+                                                mViewViewModel.añadeElementoPanel0(panta);
+                                            }
+                                        }
                                     }
                                 }
-                                else{
-                                    if (p.getMensaje().equals(String.valueOf(msg))){
-                                        recibir=true;
-                                        mViewViewModel.añadeBoton(p);
+                                break;
+                            case 4:
+                                Botones pAux =(Botones) Fmando4Activado.pantallasActivas.get(i).getTag();
+                                Botones p=mViewViewModel.getBoton(pAux.getId());
+                                if (p.getIDaux()==R.id.radioRecibido || p.getIDaux() ==R.id.radioAmbos){
+                                    if (p.getMensaje().equals("SINCARACTER")){
+                                        if (msg==1){
+                                            pantalla.setTextColor(Color.RED);
+                                            pantalla.append("\n"+"In:  ");
+                                            pantalla.setTextColor(Color.BLACK);
+                                        }
+                                        pantalla.append(String.valueOf(msg));
+                                    }else {
+                                        if (recibir){
+                                            if (p.getMensaje().equals(String.valueOf(msg))){
+                                                recibir=false;
+                                                mViewViewModel.añadeBoton(p);
+                                            }else{
+                                                pantalla.append(String.valueOf(msg));
+                                            }
+                                        }
+                                        else{
+                                            if (p.getMensaje().equals(String.valueOf(msg))){
+                                                pantalla.setTextColor(Color.RED);
+                                                pantalla.append("\n"+"In:  ");
+                                                pantalla.setTextColor(Color.BLACK);
+                                                recibir=true;
+                                                mViewViewModel.añadeBoton(p);
+                                            }
+                                        }
                                     }
-
                                 }
-                            }
-
-
+                                break;
                         }
-                        // TextView a= (TextView) context.getResources().getLayout(R.layout.pantalla);
-                        // a.setText(tipo.toString());
-
                     }
                 }
 
+                if (Fmando4Activado.graficasActivas!=null){
+                    for (int i =0; i<Fmando4Activado.graficasActivas.size();i++) {
+                        ConstraintLayout graflayout = Fmando4Activado.graficasActivas.get(i);
+                        LinearLayoutCompat barra= (LinearLayoutCompat) graflayout.getChildAt(1);
+                        barra.setVisibility(View.VISIBLE);
+                        LinearLayoutCompat lin1 =(LinearLayoutCompat) barra.getChildAt(0);
+                        CheckBox scroll=(CheckBox) lin1.getChildAt(1);
+
+                        LinearLayoutCompat lin2 =(LinearLayoutCompat) barra.getChildAt(1);
+                        CheckBox zoom=(CheckBox) lin2.getChildAt(1);
+
+                        LinearLayoutCompat lin3 =(LinearLayoutCompat) barra.getChildAt(2);
+                        CheckBox autox=(CheckBox) lin3.getChildAt(1);
+                        LinearLayoutCompat lin4 =(LinearLayoutCompat) barra.getChildAt(3);
+                        CheckBox autoy=(CheckBox) lin4.getChildAt(1);
+                        LinearLayoutCompat lin5 =(LinearLayoutCompat) barra.getChildAt(4);
+                        CheckBox STE=(CheckBox) lin5.getChildAt(1);
+                        switch (Mando4.numeroPanel){
+                            case 0:
+                                Panel0 grafaux =(Panel0) Fmando4Activado.graficasActivas.get(i).getTag();
+                                if (grafaux!=null){
+                                    Panel0 graf=mViewViewModel.getViewByIDPanel0(grafaux.getId());
+                                }
+
+                                break;
+                            case 4:
+                                Botones graf4aux =(Botones) Fmando4Activado.graficasActivas.get(i).getTag();
+                                if (graf4aux!=null){
+                                    Botones graf4=mViewViewModel.getBoton(graf4aux.getId());
+                                    if (datosGrafica&msg!=0x47){
+                                        if (msg!=0x00){
+                                            xy = xy+msg;
+                                        }
+                                    }
+                                    if (datosGrafica&msg==0x47){
+                                        datosGrafica=false;
+                                        int y =Integer.valueOf(xy);
+                                        tiempo++;
+                                        DataPoint coordenada=new DataPoint(tiempo,y);
+                                        boolean ste=false;
+                                        if(graf4.getMensaje().toCharArray()[4]==0x73){
+                                            ste =true;
+                                        }else if(graf4.getMensaje().toCharArray()[4]==0x6E){
+                                            ste =false;
+                                        }
+                                        GraphView grafica=(GraphView) graflayout.getChildAt(0);
+                                        if (scroll.isChecked()){
+                                            grafica.getViewport().setScrollable(true);
+                                        }else{
+                                            grafica.getViewport().setScrollable(false);
+                                        }
+                                        if (zoom.isChecked()){
+                                            grafica.getViewport().setScalable(true);
+                                        }else{
+                                            grafica.getViewport().setScalable(false);
+                                        }
+                                        if (autox.isChecked()){
+                                            grafica.getViewport().setXAxisBoundsManual(true);
+                                        }else{
+                                            grafica.getViewport().setXAxisBoundsManual(false);
+                                        }
+                                        if (autoy.isChecked()){
+                                            grafica.getViewport().setYAxisBoundsManual(true);
+                                        }else{
+                                            grafica.getViewport().setYAxisBoundsManual(false);
+                                        }
+                                        if (STE.isChecked()){
+                                            ste=true;
+                                        }else{
+                                            ste=false;
+                                        }
+                                        serie0.appendData(coordenada,ste,graf4.getIDaux());
+                                        grafica.getGridLabelRenderer().setHorizontalAxisTitle("número de medida");
+                                        grafica.getGridLabelRenderer().setVerticalAxisTitle("velocidad");
+                                        xy="";
+                                    }
+
+                                    if (caracterAnterior==1&msg==0x47){
+                                        datosGrafica=true;
+                                    }
+                                }
+
+
+
+                                break;
+                        }
+                    }
+                }
                 gestionar_mensaje(mensaje.arg1);
+                caracterAnterior=msg;
             }
         }
     }
@@ -791,7 +938,6 @@ public class BluetoothMainActivity extends AppCompatActivity {
                     if (MotorActivity.pruebas!=null){
                         MotorActivity.velocidad.setText(""+MotorActivity.velocidad.getText()+trama.get(1)+trama.get(2)+trama.get(3)+" RPM");
                     }
-
                     trama.clear();
                     break;
 
@@ -859,12 +1005,37 @@ public class BluetoothMainActivity extends AppCompatActivity {
             for (int i =0; i<Fmando4Activado.pantallasActivas.size();i++) {
               // TextView a= (TextView) context.getResources().getLayout(R.layout.pantalla);
               // a.setText(tipo.toString());
-               Botones pAux =(Botones) Fmando4Activado.pantallasActivas.get(i).getTag();
-               Botones p=Fmando4.mViewViewModel.getBoton(pAux.getId());
-               if (p.getIDaux()==R.id.radioEnviado || p.getIDaux() ==R.id.radioAmbos){
+                switch (Mando4.numeroPanel){
+                    case 0:
+                        Panel0 pantallaAux =(Panel0) Fmando4Activado.pantallasActivas.get(i).getTag();
+                        Panel0 panta=mViewViewModel.getViewByIDPanel0(pantallaAux.getId());
+                        if (panta.getIDaux()==R.id.radioEnviado || panta.getIDaux() ==R.id.radioAmbos){
+                            TextView pantalla=Fmando4Activado.pantallasActivas.get(i);
+                            pantalla.setTextColor(Color.RED);
+                            // pantalla.setText(pantalla.getText()+"\n"+"Out: ");
+                            pantalla.append("\n"+"Out: ");
+                            pantalla.setTextColor(Color.BLACK);
+                            // pantalla.setText(Fmando4Activado.pantallasActivas.get(i).getText()+a);
+                            pantalla.append(a);
 
-                   Fmando4Activado.pantallasActivas.get(i).setText(Fmando4Activado.pantallasActivas.get(i).getText()+a);
-               }
+                        }
+                        break;
+                    case 4:
+                        Botones pAux =(Botones) Fmando4Activado.pantallasActivas.get(i).getTag();
+                        Botones p=mViewViewModel.getBoton(pAux.getId());
+                        if (p.getIDaux()==R.id.radioEnviado || p.getIDaux() ==R.id.radioAmbos){
+                            TextView pantalla=Fmando4Activado.pantallasActivas.get(i);
+                            pantalla.setTextColor(Color.RED);
+                            // pantalla.setText(pantalla.getText()+"\n"+"Out: ");
+                            pantalla.append("\n"+"Out: ");
+                            pantalla.setTextColor(Color.BLACK);
+                            // pantalla.setText(Fmando4Activado.pantallasActivas.get(i).getText()+a);
+                            pantalla.append(a);
+
+                        }
+                        break;
+                }
+
 
 
                 }

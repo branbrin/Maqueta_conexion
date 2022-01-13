@@ -29,6 +29,8 @@ public class ViewRepository {
 
     // Room executes all queries on a separate thread.
     // Observed LiveData will notify the observer when the data has changed.
+
+    //PANEL4--------------------------------------------------------------------------------
     LiveData<List<Botones>> getAllObservedBotones() {
         return mAllViews;
     }
@@ -41,11 +43,16 @@ public class ViewRepository {
         return mBotonesDao.getBoton(idbusca);
     }
 
+    Botones getTitulo (String titulo){ return mBotonesDao.getTitulo(titulo); }
+
+    Botones getDescripcion (String descripcion){ return mBotonesDao.getDescripcion(descripcion); }
+
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
     // that you're not doing any long running operations on the main thread, blocking the UI.
     long añadeBoton(Botones botones) {
         ViewRoomDatabase.databaseWriteExecutor.execute(() -> {
             id= mBotonesDao.añadeBoton(botones);
+
 
         });
         return id;
@@ -62,4 +69,44 @@ public class ViewRepository {
             mBotonesDao.borrarTodo();
         });
     }
+    //FIN PANEL4
+
+    //PANEL0------------------------------------------------------------------------
+    LiveData<List<Panel0>> getPanel0LiveData(){ return mBotonesDao.getPanel0LiveData(); }
+
+    Panel0[]  getPanel0(){
+        return mBotonesDao.getPanel0();
+    }
+
+    Panel0 getViewByIDPanel0 (int idbusca){
+        return mBotonesDao.getViewByIDPanel0(idbusca);
+    }
+
+    Panel0 getTitulo0 (String titulo){ return mBotonesDao.getTitulo0(titulo); }
+
+
+
+    // You must call this on a non-UI thread or your app will throw an exception. Room ensures
+    // that you're not doing any long running operations on the main thread, blocking the UI.
+    long añadeElementoPanel0(Panel0 panel0) {
+        ViewRoomDatabase.databaseWriteExecutor.execute(() -> {
+            id= mBotonesDao.añadeElementoPanel0(panel0);
+
+
+        });
+        return id;
+    }
+
+    void borraEnPanel0(Panel0 panel0) {
+        ViewRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mBotonesDao.borraEnPanel0(panel0);
+        });
+    }
+
+    void borrarTodoPanel0() {
+        ViewRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mBotonesDao.borrarTodoPanel0();
+        });
+    }
+
 }

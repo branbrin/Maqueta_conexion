@@ -6,6 +6,8 @@
     android:layout_height="101dp"
     android:background="@drawable/pantalla"
     android:scrollbars="vertical"
+    android:paddingLeft="10dp"
+    android:gravity="bottom"
     android:text=""
     >
 

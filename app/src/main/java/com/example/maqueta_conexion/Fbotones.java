@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import static com.example.maqueta_conexion.MainActivity.mViewViewModel;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link Fbotones#newInstance} factory method to
@@ -29,8 +31,8 @@ public class Fbotones extends Fragment {
     static String actualizCab;
     static String actualizMen;
     static TextView mensaje;
-  static  TextView cabecero;
-  static TextView ultimo;
+    static  TextView cabecero;
+    static TextView ultimo;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -89,28 +91,59 @@ public class Fbotones extends Fragment {
         cabecero=view.findViewById(R.id.cabecero);
         ultimo=view.findViewById(R.id.ultimo);
 
-        Botones baux=(Botones) mButon.getTag();
-        Botones b = Fmando4.mViewViewModel.getBoton(baux.mID);
-        if (b!=null){
-            mensaje.setText(""+ b.getMensaje());
-            cabecero.setText(""+ b.getCabecero());
-            ultimo.setText(""+ b.getUltimo());
+        switch (Mando4.numeroPanel){
+            case 0:
+                Panel0 botaux=(Panel0) mButon.getTag();
+                Panel0 bot = mViewViewModel.getViewByIDPanel0(botaux.mID);
+                if (bot!=null){
+                    mensaje.setText(""+ bot.getMensaje());
+                    cabecero.setText(""+ bot.getCabecero());
+                    ultimo.setText(""+ bot.getUltimo());
+                }
+
+                boton.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view1, MotionEvent motionEvent){
+                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                            GeneralDialogFragment generalDialogFragment =
+                                    GeneralDialogFragment.newInstance("CONFIGURAR BOTON", "message",bot.getId(),R.layout.popup_botones);
+                            generalDialogFragment.show(getParentFragmentManager(),"dialog");
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                });
+                break;
+            case 4:
+                Botones baux=(Botones) mButon.getTag();
+                Botones b = mViewViewModel.getBoton(baux.mID);
+                if (b!=null){
+                    mensaje.setText(""+ b.getMensaje());
+                    cabecero.setText(""+ b.getCabecero());
+                    ultimo.setText(""+ b.getUltimo());
+                }
+
+                boton.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view1, MotionEvent motionEvent){
+                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                            GeneralDialogFragment generalDialogFragment =
+                                    GeneralDialogFragment.newInstance("CONFIGURAR BOTON", "message",b.getId(),R.layout.popup_botones);
+                            generalDialogFragment.show(getParentFragmentManager(),"dialog");
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                });
+                break;
         }
 
 
-boton.setOnTouchListener(new View.OnTouchListener() {
-    @Override
-    public boolean onTouch(View view1, MotionEvent motionEvent){
-        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-            GeneralDialogFragment generalDialogFragment =
-                    GeneralDialogFragment.newInstance("CONFIGURAR BOTON", "message",b.getId(),R.layout.popup_botones);
-            generalDialogFragment.show(getParentFragmentManager(),"dialog");
-            return true;
-        } else {
-            return false;
-        }
-    }
-});
+
+
+
 
     }
    static public void actualizar(String cabecer,String mensaj,String ultim){

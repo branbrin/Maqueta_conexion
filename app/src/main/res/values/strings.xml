@@ -30,4 +30,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Aceptar">Aceptar</string>
     <string name="Cancelar">Cancelar</string>
+    <string name="botonEditarPanelesAncho0">100dp</string>
+
+
 </resources>

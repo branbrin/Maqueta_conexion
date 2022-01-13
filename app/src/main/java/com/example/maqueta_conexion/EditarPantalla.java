@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import static com.example.maqueta_conexion.MainActivity.mViewViewModel;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link EditarPantalla#newInstance} factory method to
@@ -78,33 +80,55 @@ public class EditarPantalla extends Fragment {
         Button boton = view.findViewById(R.id.boton_configpantalla);
         pantallaIdentificador = view.findViewById(R.id.pant_id);
         pantallaModo = view.findViewById(R.id.modo_pantalla);
-        Botones caux = (Botones) mPantalla.getTag();
-        Botones c=Fmando4.mViewViewModel.getBoton(caux.getId());
-        pantallaIdentificador.setText(""+c.getMensaje());
-        if (c.getIDaux() == R.id.radioRecibido) {
-            pantallaModo.setText("RECIBIR");
-        } else if (c.getIDaux() == R.id.radioEnviado) {
-            pantallaModo.setText("ENVIAR");
+
+        switch (Mando4.numeroPanel){
+            case 0:
+                Panel0 pantaux = (Panel0) mPantalla.getTag();
+                Panel0 pantalla=mViewViewModel.getViewByIDPanel0(pantaux.getId());
+                if (pantalla != null){
+                    pantallaIdentificador.setText(""+pantalla.getMensaje());
+                    if (pantalla.getIDaux() == R.id.radioRecibido) {
+                        pantallaModo.setText("RECIBIR");
+                    } else if (pantalla.getIDaux() == R.id.radioEnviado) {
+                        pantallaModo.setText("ENVIAR");
+                    }
+                    else if(pantalla.getIDaux() == R.id.radioAmbos){
+                        pantallaModo.setText("AMBOS");
+                    }
+                }
+                boton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GeneralDialogFragment generalDialogFragment =
+                                GeneralDialogFragment.newInstance("CONFIGURAR PANTALLA", "message", pantalla.getId(), R.layout.popup_pantalla);
+                        generalDialogFragment.show(getParentFragmentManager(), "dialog");
+                    }
+                });
+                break;
+            case 4:
+                Botones caux = (Botones) mPantalla.getTag();
+                Botones c=mViewViewModel.getBoton(caux.getId());
+                if (c != null){
+                    pantallaIdentificador.setText(""+c.getMensaje());
+                    if (c.getIDaux() == R.id.radioRecibido) {
+                        pantallaModo.setText("RECIBIR");
+                    } else if (c.getIDaux() == R.id.radioEnviado) {
+                        pantallaModo.setText("ENVIAR");
+                    }
+                    else if(c.getIDaux() == R.id.radioAmbos){
+                        pantallaModo.setText("AMBOS");
+                    }
+                }
+                boton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GeneralDialogFragment generalDialogFragment =
+                                GeneralDialogFragment.newInstance("CONFIGURAR PANTALLA", "message", c.getId(), R.layout.popup_pantalla);
+                        generalDialogFragment.show(getParentFragmentManager(), "dialog");
+                    }
+                });
+                break;
         }
-        else if(c.getIDaux() == R.id.radioAmbos){
-            pantallaModo.setText("AMBOS");
-        }
-
-
-
-
-
-
-        boton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GeneralDialogFragment generalDialogFragment =
-                        GeneralDialogFragment.newInstance("CONFIGURAR PANTALLA", "message", c.getId(), R.layout.popup_pantalla);
-                generalDialogFragment.show(getParentFragmentManager(), "dialog");
-
-
-            }
-        });
     }
     static public void actualizarPantalla(int IDaux, String identificador) {
         if (IDaux == R.id.radioRecibido) {
@@ -114,7 +138,6 @@ public class EditarPantalla extends Fragment {
         }else if(IDaux==R.id.radioAmbos){
             pantallaModo.setText("AMBOS");
         }
-
         pantallaIdentificador.setText(identificador);
 
     }

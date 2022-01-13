@@ -108,14 +108,10 @@ public class MotorActivity extends AppCompatActivity {
 
     public void botonMarcha(View view) {
         BluetoothMainActivity.gestionBoton(Constantes.MARCHA);
-
-
     }
     public static void botonParo(View view) {
         BluetoothMainActivity.gestionBoton(Constantes.PARO);
-
     }
-
     public static void botonReconectar(View view) {
 
         BluetoothDevice device = BluetoothMainActivity.mBluetoothAdapter.getRemoteDevice(id);
